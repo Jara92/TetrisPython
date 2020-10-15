@@ -1,32 +1,40 @@
 import pyglet
 from EApplicationState import ApplicationState
+from pyglet import image
 
 
 class CGame:
-    game_window = None
+    window = None
+
 
     def __init__(self):
-        self.prepare_game()
+        a = 1
 
     # Prepare new game.
-    def prepare_game(self):
-        window_width = 400
-        window_height = 750
+    def prepare_game(self, window_width=500, window_height=650):
 
-        self.game_window = pyglet.window.Window(width=window_width, height=window_height)
-
-        self.game_window.set_caption("Tetris")
+        self.window = pyglet.window.Window(width=window_width, height=window_height)
+        self.window.set_caption("Tetris")
 
         label = pyglet.text.Label('Tetris',
                                   font_name='Arial',
                                   font_size=36,
-                                  x=self.game_window.width // 2, y=self.game_window.height // 2,
+                                  x=self.window.width // 2, y=self.window.height // 2,
                                   anchor_x='center', anchor_y='center')
 
-        @self.game_window.event
+
+
+        @self.window.event
         def on_draw():
-            self.game_window.clear()
+            self.window.clear()
             label.draw()
+
+            sprite = pyglet.sprite.Sprite(pyglet.image.load("assets/img/tile.png"))
+            sprite.x = 0
+            sprite.y = 0
+            sprite.draw()
+
+
 
         pyglet.clock.schedule_interval(self.update, 1 / 120.0)
 
