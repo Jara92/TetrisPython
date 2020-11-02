@@ -1,9 +1,12 @@
 import pyglet
 from EApplicationState import ApplicationState
+from CShape import CShape
 from pyglet import image
 
 
 class CGame:
+    update_interval = 30
+    active_shape = None
     window = None
     board = None
 
@@ -27,14 +30,17 @@ class CGame:
             self.window.clear()
             label.draw()
 
-         #   self.sprite.draw()
+#            self.sprite.draw()
 
         # Define game board size and create 2D array.
         cols = rows = 18
         self.board = [[0] * cols] * rows
 
         # TODO I will have to change this dynamically because the game is getting faster.
-        pyglet.clock.schedule_interval(self.update, 1 / 120.0)
+        pyglet.clock.schedule_interval(self.update, 1 / self.update_interval)
+
+        # Define first shape
+        self.active_shape = CShape()
 
     # Run a new game.
     def run(self):
@@ -46,4 +52,10 @@ class CGame:
 
     # Update game state.
     def update(self, delta_time):
-        print("Update game. DeltaTime: " + str(delta_time))
+
+        self.active_shape.print_shape()
+        print("=========")
+        self.active_shape.rotate_shape()
+
+
+       # print("Update game. DeltaTime: " + str(delta_time))
