@@ -4,10 +4,14 @@ from EApplicationState import ApplicationState
 from CShape import CShape
 from pyglet import image
 
+"""
+Change window origin to top-left corner.
+@source https://stackoverflow.com/questions/10167329/change-the-position-of-the-origin-in-pygame-coordinate-system
+"""
+
 
 def to_pygame(coords, height):
-    """Convert coordinates into pygame coordinates (lower-left => top left)."""
-    return (coords[0], height - coords[1])
+    return coords[0], height - coords[1]
 
 
 class CGame:
@@ -71,7 +75,7 @@ class CGame:
         pyglet.clock.schedule_interval(self.update, 1 / self.update_interval)
 
         # Define first shape
-        self.active_shape = CShape((0, 0))
+        self.active_shape = CShape((self.board_size[0] // 2 + 1, 0))
 
     # Run a new game.
     def run(self):
