@@ -8,9 +8,9 @@ class CShape:
     __shapes = [[[False, False, False], [False, True, False], [True, True, True]],
                 [[True, True], [True, True]]]
     shape_layout = None
-    location = (0, 0)
+    location = (5, 0)
 
-    def __init__(self, spawn_location=(0, 0)):
+    def __init__(self, spawn_location=(5, 0)):
         self.location = spawn_location
         # We need some random layout for this shape.
         # Deep copy needed because we will rotate the shape.
@@ -44,3 +44,9 @@ class CShape:
         N = len(self.shape_layout[0])
         for i in range(N):
             print(self.shape_layout[i])
+
+    """
+    Move shape down.
+    """
+    def move(self):
+        self.location = (self.location[0], self.location[1] + 1)

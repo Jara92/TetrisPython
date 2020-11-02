@@ -1,46 +1,67 @@
 import pyglet
+from pyglet import window
 from EApplicationState import ApplicationState
 from CShape import CShape
 from pyglet import image
 
 
+def to_pygame(coords, height):
+    """Convert coordinates into pygame coordinates (lower-left => top left)."""
+    return (coords[0], height - coords[1])
+
+
 class CGame:
-    update_interval = 30
+    update_interval = 10
 
     board_size = (10, 35)
-    cell_size = 50
+    tile_size = 50
 
     active_shape = None
     next_shape = None
     game_board = []
-    tile_texture = None
+    tile_sprite = None
 
     window = None
+    window_size = (500, 650)
 
     # Prepare new game.
     def prepare_game(self, window_width=500, window_height=650, tile_size=25):
+        self.window_size = (window_width, window_height)
+        self.tile_size = tile_size
+
         self.window = pyglet.window.Window(width=window_width, height=window_height)
 
         if not self.window:
             return False
 
         self.window.set_caption("Tetris")
-
+        """
         label = pyglet.text.Label('Tetris',
                                   font_name='Arial',
                                   font_size=36,
                                   x=self.window.width // 2, y=self.window.height // 2,
                                   anchor_x='center', anchor_y='center')
+        """
 
         @self.window.event
         def on_draw():
             self.window.clear()
-            label.draw()
+            # label.draw()
 
-            self.tile_texture.draw()
+            for i in range(len(self.active_shape.shape_layout)):
+                for j in range(len(self.active_shape.shape_layout)):
+                    if self.active_shape.shape_layout[i][j]:
+                        self.tile_sprite.position = to_pygame(((self.active_shape.location[0] + j) * self.tile_size,
+                                                               (self.active_shape.location[1] + i) * self.tile_size),
+                                                              self.window_size[1])
+                        self.tile_sprite.draw()
 
+        # Load tile image from resources.
         image_source = pyglet.image.load('assets/img/tile.png')
-        self.tile_texture = pyglet.sprite.Sprite(image_source, x=self.cell_size, y=self.cell_size)
+
+        # Create sprite and scale it to self.cell_size size in pixels.
+        self.tile_sprite = pyglet.sprite.Sprite(image_source, x=self.tile_size, y=self.tile_size)
+        self.tile_sprite.scale = self.tile_size / self.tile_sprite.width
 
         # Define game board size and create 2D array.
         # self.game_board = [[0] * cols] * rows
@@ -62,10 +83,10 @@ class CGame:
 
     # Update game state.
     def update(self, delta_time):
+        self.active_shape.move()
+        debu = ""
+        # self.active_shape.print_shape()
+        # print("=========")
+        # self.active_shape.rotate_shape()
 
-        self.active_shape.print_shape()
-        print("=========")
-        self.active_shape.rotate_shape()
-
-
-       # print("Update game. DeltaTime: " + str(delta_time))
+    # print("Update game. DeltaTime: " + str(delta_time))
