@@ -63,8 +63,9 @@ class CGame:
         # TODO I will have to change this dynamically because the game is getting faster.
         pyglet.clock.schedule_interval(self.update, 1 / self.update_interval)
 
-        # Define first shape
-        self.active_shape = CShape(self.tile_sprite, (self.board.size[0] // 2 + 1, self.board.size[1] + 1))
+        # Define first shape # TODO exception when the shape is on starting location
+        #self.active_shape = CShape(self.tile_sprite, (self.board.size[0] // 2 + 1, self.board.size[1] + 1))
+        self.active_shape = CShape(self.tile_sprite, (self.board.size[0] // 2 + 1, self.board.size[1] + 2))
 
     # Run a new game.
     def run(self):
@@ -87,16 +88,16 @@ class CGame:
 
         batch = pyglet.graphics.Batch()
 
-        for i in range(self.board_size[0] + 1):
+        for i in range(self.board.size[0] + 1):
             line1 = shapes.Line(i * self.tile_size, 0,
-                                i * self.tile_size, self.board_size[1] * self.tile_size, 2,
+                                i * self.tile_size, self.board.size[1] * self.tile_size, 2,
                                 color=(255, 0, 0),
                                 batch=batch)
             batch.draw()
 
-        for i in range(self.board_size[1] + 1):
+        for i in range(self.board.size[1] + 1):
             line1 = shapes.Line(0, i * self.tile_size,
-                                self.board_size[0] * self.tile_size, i * self.tile_size, 2,
+                                self.board.size[0] * self.tile_size, i * self.tile_size, 2,
                                 color=(255, 0, 0),
                                 batch=batch)
             batch.draw()

@@ -70,13 +70,34 @@ class CShape:
         for i in range(N):
             print(self.shape_layout[i])
 
-    def move(self, board):
+    def move(self, board: CBoard):
         """
         Move shape down. We need to verify that we are not colliding in @board.
         @param board Game board.
         """
 
+        # Save old location before making the move.
+        old_location = self.location
+
+        # Make the move.
         self.location = (self.location[0], self.location[1] - 1)
+
+        # Check collisions.
+        for i in range(len(self.shape_layout)):
+            for j in range(len(self.shape_layout)):
+                # Get tile global coords.
+                tile_coords = (self.location[0] - i, self.location[1] - j)
+                print(str(tile_coords))
+                tile_coords = (0, 0)
+
+                # If tile is active in current layout and cell is not free in board
+                if self.shape_layout[i][j] and not board.cell_is_free(tile_coords):
+                    # Reset location and return False, because the movement was not successful.
+                    self.location = old_location
+                    return False
+
+        # Every tile is in free cell so the movement is successful.
+        return True
 
     def draw(self, tile_size):
         """
@@ -88,5 +109,5 @@ class CShape:
             for j in range(len(self.shape_layout)):
                 if self.shape_layout[i][j]:
                     self.tile_sprite.position = (((self.location[0] - j) * tile_size,
-                                                  (self.location[1] - i) * tile_size))
+                                                  (self.location[1] + i) * tile_size))
                     self.tile_sprite.draw()
