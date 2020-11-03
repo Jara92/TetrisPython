@@ -2,6 +2,7 @@ import pyglet
 from pyglet import window, shapes
 from EApplicationState import ApplicationState
 from CShape import CShape
+from CBoard import CBoard
 from pyglet import image
 
 """
@@ -16,14 +17,14 @@ def to_pygame(coords, height):
 
 
 class CGame:
-    update_interval = 10
+    update_interval = 3
+    timer = 0
 
-    board_size = (15, 20)
     tile_size = 50
 
+    board = None
     active_shape = None
     next_shape = None
-    game_board = []
     tile_sprite = None
 
     window = None
@@ -45,9 +46,12 @@ class CGame:
         def on_draw():
             self.window.clear()
 
+            self.draw_debug()
+
             self.active_shape.draw(self.tile_size)
 
-            self.draw_debug()
+        # Create new board.
+        self.board = CBoard()
 
         # Load tile image from resources.
         image_source = pyglet.image.load('assets/img/tile.png')
@@ -56,15 +60,11 @@ class CGame:
         self.tile_sprite = pyglet.sprite.Sprite(image_source, x=self.tile_size, y=self.tile_size)
         self.tile_sprite.scale = self.tile_size / self.tile_sprite.width
 
-        # Define game board size and create 2D array.
-        # self.game_board = [[0] * cols] * rows
-        self.game_board = [[0] * self.board_size[0]] * self.board_size[1]
-
         # TODO I will have to change this dynamically because the game is getting faster.
         pyglet.clock.schedule_interval(self.update, 1 / self.update_interval)
 
         # Define first shape
-        self.active_shape = CShape(self.tile_sprite, (self.board_size[0] // 2 + 1, self.board_size[1] + 1))
+        self.active_shape = CShape(self.tile_sprite, (self.board.size[0] // 2 + 1, self.board.size[1] + 1))
 
     # Run a new game.
     def run(self):
@@ -76,16 +76,15 @@ class CGame:
 
     # Update game state.
     def update(self, delta_time):
-        self.active_shape.move()
-        debu = ""
-        # self.active_shape.print_shape()
-        # print("=========")
-        # self.active_shape.rotate_shape()
+        movement = self.active_shape.move(self.board)
 
         # print("Update game. DeltaTime: " + str(delta_time))
 
     def draw_debug(self):
-        # Debuggin
+        """
+        Draw debug matrix and other debugging objects.
+        """
+
         batch = pyglet.graphics.Batch()
 
         for i in range(self.board_size[0] + 1):

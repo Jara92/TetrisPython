@@ -2,6 +2,7 @@ import copy
 import numpy
 import pyglet
 from random import randint
+from CBoard import CBoard
 
 
 # Rotatable shape in game.
@@ -27,55 +28,62 @@ class CShape:
         # Deep copy needed because we will rotate the shape.
         self.shape_layout = copy.deepcopy(CShape.__random_shape())
 
-    """
-    Return random shape in __shapes.
-    @:returns Random shape array.
-    """
-
     @staticmethod
     def __random_shape():
+        """
+        Return random shape in __shapes.
+        @:returns Random shape array.
+        """
+
         # Generate random index in shapes list - We want new random shape.
         random_index = randint(0, len(CShape.__shapes) - 1)
 
         return CShape.__shapes[random_index]
 
-    """
-    Return random color in __colors.
-    @:returns Random color.
-    """
-
     @staticmethod
     def __random_color():
+        """
+        Return random color in __colors.
+        @:returns Random color.
+        """
+
         # Generate random index in color list - We want new random color.
         random_index = randint(0, len(CShape.__colors) - 1)
 
         return CShape.__colors[random_index]
 
-    """
-    Rotate shape by 90 degrees left.
-    """
+    def rotate_shape(self, board):
+        """
+        Rotate shape by 90 degrees left. We need to verify that we are not colliding in @board.
+        @param board Game board.
+        """
 
-    def rotate_shape(self):
         self.shape_layout = numpy.rot90(numpy.array(self.shape_layout, bool), 1, (1, 0))
         return
 
-    """
-    Print shape layout.
-    """
-
     def print_shape(self):
+        """
+        Print shape layout.
+        """
+
         N = len(self.shape_layout[0])
         for i in range(N):
             print(self.shape_layout[i])
 
-    """
-    Move shape down.
-    """
+    def move(self, board):
+        """
+        Move shape down. We need to verify that we are not colliding in @board.
+        @param board Game board.
+        """
 
-    def move(self):
         self.location = (self.location[0], self.location[1] - 1)
 
     def draw(self, tile_size):
+        """
+        Draw shape using Pyglet library.
+        @param tile_size Size of one cell in gameboard in pixels.
+        """
+
         for i in range(len(self.shape_layout)):
             for j in range(len(self.shape_layout)):
                 if self.shape_layout[i][j]:
