@@ -11,7 +11,7 @@ Change window origin to top-left corner.
 
 
 def to_pygame(coords, height):
-    #return coords[0], height - coords[1]
+    # return coords[0], height - coords[1]
     return coords
 
 
@@ -45,15 +45,9 @@ class CGame:
         def on_draw():
             self.window.clear()
 
-            self.draw_debug()
+            self.active_shape.draw(self.tile_size)
 
-            for i in range(len(self.active_shape.shape_layout)):
-                for j in range(len(self.active_shape.shape_layout)):
-                    if self.active_shape.shape_layout[i][j]:
-                        self.tile_sprite.position = to_pygame(((self.active_shape.location[0] - j) * self.tile_size,
-                                                               (self.active_shape.location[1] - i) * self.tile_size),
-                                                              self.window_size[1])
-                        self.tile_sprite.draw()
+            self.draw_debug()
 
         # Load tile image from resources.
         image_source = pyglet.image.load('assets/img/tile.png')
@@ -70,7 +64,7 @@ class CGame:
         pyglet.clock.schedule_interval(self.update, 1 / self.update_interval)
 
         # Define first shape
-        self.active_shape = CShape((self.board_size[0] // 2 + 1, self.board_size[1] + 1))
+        self.active_shape = CShape(self.tile_sprite, (self.board_size[0] // 2 + 1, self.board_size[1] + 1))
 
     # Run a new game.
     def run(self):
