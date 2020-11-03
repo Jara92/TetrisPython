@@ -49,4 +49,4 @@ class CShape:
     Move shape down.
     """
     def move(self):
-        self.location = (self.location[0], self.location[1] + 1)
+        self.location = (self.location[0], self.location[1] - 1)
