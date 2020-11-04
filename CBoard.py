@@ -8,7 +8,12 @@ class CBoard:
         # Define game board size and create 2D array.
         # self.game_board = [[0] * cols] * rows
         # self.__matrix = [[0] * self.size[0]] * self.size[1]
-        self.__matrix = [[0 for x in range(self.size[0])] for y in range(self.size[1])]
+        self.__matrix = [[None for x in range(self.size[1])] for y in range(self.size[0])]
+
+        # Fill new matrix by None value.
+        for i in range(self.size[0]):
+            for j in range(self.size[1]):
+                self.__matrix[i][j] = None
 
     def cell_is_out_of_board(self, coords):
         """
@@ -28,9 +33,11 @@ class CBoard:
         :param coords: Cell coords.
         :return: True - The cell is free.
         """
+
         # Given cell must be inside boards matrix.
         if self.cell_is_out_of_board(coords):
-            raise Exception("Sorry, invalid coords argument: " + str(coords))
+            return False
+            #raise Exception("Sorry, invalid coords argument: " + str(coords))
 
-        print(str(coords))
-        return self.__matrix[coords[0]][coords[1]]
+        #print(str(coords))
+        return self.__matrix[coords[0]][coords[1]] is None

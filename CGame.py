@@ -65,7 +65,8 @@ class CGame:
 
         # Define first shape # TODO exception when the shape is on starting location
         #self.active_shape = CShape(self.tile_sprite, (self.board.size[0] // 2 + 1, self.board.size[1] + 1))
-        self.active_shape = CShape(self.tile_sprite, (self.board.size[0] // 2 + 1, self.board.size[1] + 2))
+        #self.active_shape = CShape(self.tile_sprite, (self.board.size[0] // 2 + 1, self.board.size[1] -1))
+        self.active_shape = CShape(self.tile_sprite, (self.board.size[0] // 2 + 1, self.board.size[1] - 7))
 
     # Run a new game.
     def run(self):
