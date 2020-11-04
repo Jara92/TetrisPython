@@ -90,10 +90,10 @@ class CShape:
         for i in range(len(self.shape_layout)):
             for j in range(len(self.shape_layout[0])):
                 # Get tile global coords.
-                tile_coords = (self.location[0] + j, self.location[1] - i)
+                tile_coords = (self.location[0] + i, self.location[1] - j)
 
                 # If tile is active in current layout and cell is not free in board
-                if self.shape_layout[i][j] and not board.cell_is_free(tile_coords):
+                if self.shape_layout[j][i] and not board.cell_is_free(tile_coords):
                     # Reset location and return False, because the movement was not successful.
                     self.location = old_location
                     return False
@@ -108,8 +108,8 @@ class CShape:
         """
 
         for i in range(len(self.shape_layout)):
-            for j in range(len(self.shape_layout[0])):
-                if self.shape_layout[i][j]:
-                    self.tile_sprite.position = (((self.location[0] + j) * tile_size,
-                                                  (self.location[1] - i) * tile_size))
+            for j in range(len(self.shape_layout)):
+                if self.shape_layout[j][i]:
+                    self.tile_sprite.position = (((self.location[0] + i) * tile_size,
+                                                  (self.location[1] - j) * tile_size))
                     self.tile_sprite.draw()
