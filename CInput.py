@@ -31,10 +31,14 @@ class CInput:
         self.__controls = controls
 
     def on_key_press(self, symbol, modifiers):
-        return
         for action in EControls:
             if symbol == self.__controls[action]:
-                self.__state[EControls.action_left] = True
+                self.__state[action] = True
+
+    def on_key_release(self, symbol, modifiers):
+        for action in EControls:
+            if symbol == self.__controls[action]:
+                self.__state[action] = False
 
     def update_input(self):
         return
