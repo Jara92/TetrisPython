@@ -2,6 +2,9 @@ import copy
 import numpy
 import pyglet
 from random import randint
+
+from typing import Tuple
+
 from CBoard import CBoard
 
 
@@ -28,9 +31,9 @@ class CShape:
         # Deep copy needed because we will rotate the shape.
         self.shape_layout = copy.deepcopy(CShape.__random_shape())
 
-        #self.print_shape()
+        # self.print_shape()
         self.rotate_shape()
-        #self.print_shape()
+        # self.print_shape()
 
     @staticmethod
     def __random_shape():
@@ -74,17 +77,52 @@ class CShape:
         for i in range(N):
             print(self.shape_layout[i])
 
-    def move(self, board: CBoard):
+    def move_down(self, board: CBoard):
         """
-        Move shape down. We need to verify that we are not colliding in @board.
+        Move shape down.
         @param board Game board.
+        :return: True - success; False - we are colliding with something.
+        """
+
+        movement_direction = (0, -1)
+
+        return self.move(board, movement_direction)
+
+    def move_left(self, board: CBoard):
+        """
+        Move shape left.
+        @param board Game board.
+        :return: True - success; False - we are colliding with something.
+        """
+
+        movement_direction = (-1, 0)
+
+        return self.move(board, movement_direction)
+
+    def move_right(self, board: CBoard):
+        """
+        Move shape right.
+        @param board Game board.
+        :return: True - success; False - we are colliding with something.
+        """
+
+        movement_direction = (1, 0)
+
+        return self.move(board, movement_direction)
+
+    def move(self, board: CBoard, direction: Tuple[int, int]):
+        """
+        Move the shape. We need to verify that we are not colliding in @board.
+        :param board: Board Game board.
+        :param direction: Direction to be Moved.
+        :return: True - success; False - we are colliding with something.
         """
 
         # Save old location before making the move.
         old_location = self.location
 
         # Make the move.
-        self.location = (self.location[0], self.location[1] - 1)
+        self.location = (self.location[0] + direction[0], self.location[1] + direction[1])
 
         # Check collisions.
         for i in range(len(self.shape_layout)):

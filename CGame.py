@@ -1,8 +1,11 @@
 import pyglet
 from pyglet import window, shapes
+from pyglet.window import key
 from EApplicationState import ApplicationState
 from CShape import CShape
 from CBoard import CBoard
+from CInput import CInput
+from EControls import EControls
 from pyglet import image
 
 """
@@ -29,6 +32,7 @@ class CGame:
 
     window = None
     window_size = (500, 650)
+    input = None
 
     # Prepare new game.
     def prepare_game(self, window_width=500, window_height=650, tile_size=30):
@@ -43,12 +47,19 @@ class CGame:
         self.window.set_caption("Tetris")
 
         @self.window.event
+        def on_key_press(symbol, modifiers):
+            self.input.on_key_press(symbol, modifiers)
+
+        @self.window.event
         def on_draw():
             self.window.clear()
 
             self.draw_debug()
 
             self.active_shape.draw(self.tile_size)
+
+        # Create input manager using default controls.
+        self.input = CInput(self.window)
 
         # Create new board.
         self.board = CBoard()
@@ -72,13 +83,22 @@ class CGame:
     def run(self):
         self.prepare_game()
 
+       # for data in EControls:
+       #     print('{:15} = {}'.format(data.name, data.value))
+
         pyglet.app.run()
 
         return ApplicationState.APPLICATION_STATE_MENU
 
     # Update game state.
     def update(self, delta_time):
-        movement = self.active_shape.move(self.board)
+        self.input.update_input()
+
+        movement = self.active_shape.move_down(self.board)
+        if self.input.get_action(EControls.action_left):
+            movement = self.active_shape.move_left(self.board)
+        elif self.input.get_action(EControls.action_right):
+            movement = self.active_shape.move_right(self.board)
 
         # print("Update game. DeltaTime: " + str(delta_time))
 
