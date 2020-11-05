@@ -93,7 +93,6 @@ class CGame:
 
     # Update game state.
     def update(self, delta_time):
-        #self.input.update_input()
         self.timer += delta_time
 
         if self.timer > self.update_interval:

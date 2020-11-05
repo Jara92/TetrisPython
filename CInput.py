@@ -40,33 +40,6 @@ class CInput:
             if symbol == self.__controls[action]:
                 self.__state[action] = False
 
-    def update_input(self):
-        return
-        # TODO https://pyglet.readthedocs.io/en/latest/programming_guide/keyboard.html
-        win = self.__window
-        keyboard = key.KeyStateHandler()
-        win.push_handlers(keyboard)
-
-        old_state = self.__state
-        # self.__state = {EControls.action_left: True}
-
-        for action in EControls:
-            if keyboard[self.__controls[action]]:
-                pass
-                self.__state[action] = True
-
-        #return
-
-        if keyboard[key.LEFT]:
-            print("mackl")
-            self.__state[EControls.action_left] = True
-
-        for i in self.__state:
-            print(i)
-
-        # if keyboard[self.__controls[EControls.ACTION_MOVE_RIGHT]]:
-        # self.__state[EControls.AC]
-
     def get_action(self, action: EControls):
         """
         Get action status.
