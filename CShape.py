@@ -32,7 +32,7 @@ class CShape:
         self.shape_layout = copy.deepcopy(CShape.__random_shape())
 
         # self.print_shape()
-        self.rotate_shape()
+#        self.rotate_shape()
         # self.print_shape()
 
     @staticmethod
@@ -59,14 +59,22 @@ class CShape:
 
         return CShape.__colors[random_index]
 
-    def rotate_shape(self, board=None):
+    def rotate_shape(self, board):
         """
         Rotate shape by 90 degrees left. We need to verify that we are not colliding in @board.
         @param board Game board.
         """
 
+        old_rotation = copy.deepcopy(self.shape_layout)
         self.shape_layout = numpy.rot90(numpy.array(self.shape_layout, bool), 1, (1, 0))
-        return
+
+        # Check new location collisions.
+        if self.check_collisions(board) is False:
+            # Reset location and return False, because the movement was not successful.
+            self.shape_layout = old_rotation
+            return False
+
+        return True
 
     def print_shape(self):
         """
@@ -124,6 +132,15 @@ class CShape:
         # Make the move.
         self.location = (self.location[0] + direction[0], self.location[1] + direction[1])
 
+        # Check new location collisions.
+        if self.check_collisions(board) is False:
+            # Reset location and return False, because the movement was not successful.
+            self.location = old_location
+            return False
+
+        return True
+
+    def check_collisions(self, board: CBoard):
         # Check collisions.
         for i in range(len(self.shape_layout)):
             for j in range(len(self.shape_layout[0])):
@@ -132,8 +149,6 @@ class CShape:
 
                 # If tile is active in current layout and cell is not free in board
                 if self.shape_layout[j][i] and not board.cell_is_free(tile_coords):
-                    # Reset location and return False, because the movement was not successful.
-                    self.location = old_location
                     return False
 
         # Every tile is in free cell so the movement is successful.

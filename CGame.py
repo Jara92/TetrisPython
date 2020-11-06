@@ -103,6 +103,8 @@ class CGame:
             movement = self.active_shape.move_left(self.board)
         elif self.input.get_action(EControls.action_right):
             movement = self.active_shape.move_right(self.board)
+        elif self.input.get_action(EControls.action_rotate):
+            movement = self.active_shape.rotate_shape(self.board)
 
         # print("Update game. DeltaTime: " + str(delta_time))
 
