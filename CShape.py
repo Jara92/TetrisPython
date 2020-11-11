@@ -1,6 +1,6 @@
 import copy
 import numpy
-import pyglet
+#import pyglet
 from random import randint
 
 from typing import Tuple
@@ -22,10 +22,13 @@ class CShape:
     tile_sprite = None
     tile_color = None
 
-    def __init__(self, tile_sprite: pyglet.sprite, spawn_location=(5, 0)):
+    def __init__(self, tile_sprite, spawn_location=(5, 0)):
+        # TODO add tile_sprite type
         self.tile_sprite = tile_sprite
         self.tile_sprite.color = CShape.__random_color()
         self.location = spawn_location
+
+
 
         # We need some random layout for this shape.
         # Deep copy needed because we will rotate the shape.
