@@ -68,10 +68,8 @@ class CGame:
         # Create sprite and scale it to self.cell_size size in pixels.
         self.image_source = pygame.transform.scale(self.image_source, (self.tile_size, self.tile_size))
 
-        # Define first shape # TODO exception when the shape is on starting location
-        # self.active_shape = CShape(self.tile_sprite, (self.board.size[0] // 2 + 1, self.board.size[1] + 1))
-        # self.active_shape = CShape(self.tile_sprite, (self.board.size[0] // 2 + 1, self.board.size[1] -1))
-        self.active_shape = CShape(self.image_source, (self.board.size[0] // 2 + 1, 1))
+        # Define first shape
+        self.active_shape = CShape(self.image_source, (self.board.size[0] // 2, 1))
 
     def run(self):
         self.prepare_game()
@@ -104,6 +102,11 @@ class CGame:
             self.timer = 0
             movement = self.active_shape.move_down(self.board)
 
+            # movement was not succesful
+            if movement is False:
+                self.load_next_shape()
+
+
         if self.input.get_action(EControls.action_left):
             movement = self.active_shape.move_left(self.board)
         elif self.input.get_action(EControls.action_right):
@@ -117,10 +120,21 @@ class CGame:
         else:
             self.actual_update_interval = self.update_interval
 
+    def load_next_shape(self):
+        # Store current shape into board.
+        self.active_shape.store(self.board)
+
+        # load new shape
+        self.active_shape = CShape(self.image_source, (self.board.size[0] // 2, 1))
+
+        # Check collisison
+
+
     def draw(self):
         self.surface.fill((0, 0, 0))
         self.draw_debug()
 
+        self.board.draw(self.surface, self.tile_size)
         self.active_shape.draw(self.surface, self.tile_size)
 
         pygame.display.update()

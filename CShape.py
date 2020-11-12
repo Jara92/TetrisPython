@@ -1,33 +1,41 @@
+from enum import Enum
 import copy
 import numpy
 import pygame
-# import pyglet
 from random import randint
-
 from typing import Tuple
-
 from CBoard import CBoard
 
 from NamedTupples import Coord
 
 
+class EShapeState(Enum):
+    state_idling = 0  # Waiting in queue to be spawned
+    state_spawning = 1  # Shape is spawning in the board - we are ignoring out of range movement error
+    state_moving = 2  # main state. Shape is moving down in the board.
+    state_collision = 3  # shape is colliding in the board
+
+
 # Rotatable shape in game.
 class CShape:
     __shapes = [[[False, False, False], [False, True, False], [True, True, True]],
-                [[True, True], [True, True]]]
+                [[True, True], [True, True]],
+                [[False, False, False, False], [False, False, False, False], [True, True, True, True],
+                 [False, False, False, False]]]
     """
     Colors description.
     white|orange|red|green|blue|gold
     """
     __colors = [(255, 255, 255), (255, 128, 0), (178, 34, 34), (50, 205, 50), (0, 191, 255), (255, 215, 0)]
+    __shape_state = None
     shape_layout = None
     location = (5, 0)
     tile_sprite = None
     tile_color = None
 
-    def __init__(self, tile_sprite: pygame.image, spawn_location=(5, 0)):
+    def __init__(self, tile_image: pygame.image, spawn_location=(5, 0)):
         # TODO add tile_sprite type
-        self.tile_sprite = tile_sprite.copy()
+        self.tile_sprite = tile_image.copy()
         # self.tile_sprite.color =
         self.tile_sprite.fill(CShape.__random_color(), None, pygame.BLEND_MULT)
         self.location = spawn_location
@@ -36,34 +44,16 @@ class CShape:
         # Deep copy needed because we will rotate the shape.
         self.shape_layout = copy.deepcopy(CShape.__random_shape())
 
-        # self.print_shape()
+    def store(self, board: CBoard):
+        # Check collisions.
+        for i in range(len(self.shape_layout)):
+            for j in range(len(self.shape_layout[0])):
+                # Get tile global coords.
+                tile_coords = (self.location[0] + i, self.location[1] - j)
 
-    #        self.rotate_shape()
-    # self.print_shape()
-
-    @staticmethod
-    def __random_shape():
-        """
-        Return random shape in __shapes.
-        @:returns Random shape array.
-        """
-
-        # Generate random index in shapes list - We want new random shape.
-        random_index = randint(0, len(CShape.__shapes) - 1)
-
-        return CShape.__shapes[random_index]
-
-    @staticmethod
-    def __random_color():
-        """
-        Return random color in __colors.
-        @:returns Random color.
-        """
-
-        # Generate random index in color list - We want new random color.
-        random_index = randint(0, len(CShape.__colors) - 1)
-
-        return CShape.__colors[random_index]
+                # If tile is active in current layout and cell is not free in board
+                if self.shape_layout[j][i]:
+                    board.set_cell(tile_coords, self.tile_sprite)
 
     def rotate_shape(self, board):
         """
@@ -171,4 +161,28 @@ class CShape:
             for j in range(len(self.shape_layout)):
                 if self.shape_layout[j][i]:
                     surface.blit(self.tile_sprite, (
-                    (self.location[0] + i) * tile_size, (self.location[1] - j) * tile_size))
+                        (self.location[0] + i) * tile_size, (self.location[1] - j) * tile_size))
+
+    @staticmethod
+    def __random_shape():
+        """
+        Return random shape in __shapes.
+        @:returns Random shape array.
+        """
+
+        # Generate random index in shapes list - We want new random shape.
+        random_index = randint(0, len(CShape.__shapes) - 1)
+
+        return CShape.__shapes[random_index]
+
+    @staticmethod
+    def __random_color():
+        """
+        Return random color in __colors.
+        @:returns Random color.
+        """
+
+        # Generate random index in color list - We want new random color.
+        random_index = randint(0, len(CShape.__colors) - 1)
+
+        return CShape.__colors[random_index]

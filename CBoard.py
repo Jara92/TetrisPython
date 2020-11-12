@@ -1,3 +1,6 @@
+import pygame
+
+
 class CBoard:
     size = (0, 0)
     __matrix = []
@@ -8,7 +11,7 @@ class CBoard:
         # Define game board size and create 2D array.
         # self.game_board = [[0] * cols] * rows
         # self.__matrix = [[0] * self.size[0]] * self.size[1]
-        self.__matrix = [[None for x in range(self.size[1])] for y in range(self.size[0])]
+        self.__matrix = [[pygame.Surface for x in range(self.size[1])] for y in range(self.size[0])]
 
         # Fill new matrix by None value.
         for i in range(self.size[0]):
@@ -37,7 +40,17 @@ class CBoard:
         # Given cell must be inside boards matrix.
         if self.cell_is_out_of_board(coords):
             return False
-            #raise Exception("Sorry, invalid coords argument: " + str(coords))
+            # raise Exception("Sorry, invalid coords argument: " + str(coords))
 
-        #print(str(coords))
+        # print(str(coords))
         return self.__matrix[coords[0]][coords[1]] is None
+
+    def set_cell(self, coords, sprite: pygame.image):
+        if self.cell_is_free(coords):
+            self.__matrix[coords[0]][coords[1]] = sprite
+
+    def draw(self, surface: pygame.Surface, tile_size: int):
+        for i in range(self.size[0]):
+            for j in range(self.size[1]):
+                if self.__matrix[i][j] is not None:
+                    surface.blit(self.__matrix[i][j], (i * tile_size, j * tile_size))
