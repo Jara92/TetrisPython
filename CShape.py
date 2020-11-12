@@ -1,11 +1,14 @@
 import copy
 import numpy
-#import pyglet
+import pygame
+# import pyglet
 from random import randint
 
 from typing import Tuple
 
 from CBoard import CBoard
+
+from NamedTupples import Coord
 
 
 # Rotatable shape in game.
@@ -22,21 +25,21 @@ class CShape:
     tile_sprite = None
     tile_color = None
 
-    def __init__(self, tile_sprite, spawn_location=(5, 0)):
+    def __init__(self, tile_sprite: pygame.image, spawn_location=(5, 0)):
         # TODO add tile_sprite type
-        self.tile_sprite = tile_sprite
-        self.tile_sprite.color = CShape.__random_color()
+        self.tile_sprite = tile_sprite.copy()
+        # self.tile_sprite.color =
+        self.tile_sprite.fill(CShape.__random_color(), None, pygame.BLEND_MULT)
         self.location = spawn_location
-
-
 
         # We need some random layout for this shape.
         # Deep copy needed because we will rotate the shape.
         self.shape_layout = copy.deepcopy(CShape.__random_shape())
 
         # self.print_shape()
-#        self.rotate_shape()
-        # self.print_shape()
+
+    #        self.rotate_shape()
+    # self.print_shape()
 
     @staticmethod
     def __random_shape():
@@ -95,7 +98,7 @@ class CShape:
         :return: True - success; False - we are colliding with something.
         """
 
-        movement_direction = (0, -1)
+        movement_direction = (0, 1)
 
         return self.move(board, movement_direction)
 
@@ -157,15 +160,15 @@ class CShape:
         # Every tile is in free cell so the movement is successful.
         return True
 
-    def draw(self, tile_size):
+    def draw(self, surface: pygame.Surface, tile_size: int):
         """
         Draw shape using Pyglet library.
-        @param tile_size Size of one cell in gameboard in pixels.
+        :param tile_size Size of one cell in gameboard in pixels.
+        :param surface: Surface to be used for drawing.
         """
 
         for i in range(len(self.shape_layout)):
             for j in range(len(self.shape_layout)):
                 if self.shape_layout[j][i]:
-                    self.tile_sprite.position = (((self.location[0] + i) * tile_size,
-                                                  (self.location[1] - j) * tile_size))
-                    self.tile_sprite.draw()
+                    surface.blit(self.tile_sprite, (
+                    (self.location[0] + i) * tile_size, (self.location[1] - j) * tile_size))
