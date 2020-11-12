@@ -1,26 +1,22 @@
-import pyglet
-from pyglet.window import key
+#import pyglet
+#from pyglet.window import key
+import pygame
+import pygame.key
 from EControls import EControls
 
 
 class CInput:
-    __window = None
     __controls = None
     __default_controls = {
-        EControls.action_left: key.LEFT,
-        EControls.action_right: key.RIGHT,
-        EControls.action_add_speed: key.DOWN,
-        EControls.action_rotate: key.UP,
-        EControls.action_pause: key.ESCAPE
+        EControls.action_left: pygame.K_LEFT,
+        EControls.action_right: pygame.K_RIGHT,
+        EControls.action_add_speed: pygame.K_DOWN,
+        EControls.action_rotate: pygame.K_UP,
+        EControls.action_pause: pygame.K_ESCAPE
     }
     __state = {}
 
-    def __init__(self, window: pyglet.window, controls: dict = None):
-        # Set window reference. We are gonna need it to get keyboard status.
-        self.__window = window
-        if self.__window is None:
-            raise Exception("Sorry, the window cannot be 'None'")
-
+    def __init__(self, controls: dict = None):
         # Set default layout.
         if controls is None:
             controls = CInput.__default_controls
@@ -30,12 +26,12 @@ class CInput:
     def change_controls(self, controls):
         self.__controls = controls
 
-    def on_key_press(self, symbol, modifiers):
+    def on_key_down(self, symbol):
         for action in EControls:
             if symbol == self.__controls[action]:
                 self.__state[action] = True
 
-    def on_key_release(self, symbol, modifiers):
+    def on_key_up(self, symbol):
         for action in EControls:
             if symbol == self.__controls[action]:
                 self.__state[action] = False

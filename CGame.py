@@ -70,7 +70,7 @@ class CGame:
         #   self.active_shape.draw(self.tile_size)
 
         # Create input manager using default controls.
-        self.input = CInput(self.surface)
+        self.input = CInput()
 
         # Create new board.
         self.board = CBoard()
@@ -94,6 +94,11 @@ class CGame:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     running = False
+                elif event.type == pygame.KEYDOWN:
+                    self.input.on_key_down(event.key)
+                elif event.type == pygame.KEYUP:
+                    self.input.on_key_up(event.key)
+
 
             # Calculate delta time and convert to to seconds.
             delta_time = pygame.time.Clock().tick(60) / 1000
@@ -121,20 +126,10 @@ class CGame:
             movement = self.active_shape.rotate_shape(self.board)
 
     def draw(self):
-
-        self.draw_debug()
-        # print("draw")
         self.surface.fill((0, 0, 0))
+        self.draw_debug()
 
         self.active_shape.draw(self.surface, self.tile_size)
-
-        # self.image_source = self.changColor(self.image_source, (255,128,0))
-
-        # self.image_source.blit(colorImage, (0, 0), special_flags=pygame.BLEND_RGBA_MULT)
-
-        # self.image_source.fill((0, 255, 255, 100), special_flags=pygame.BLENDMODE_ADD)
-        # self.image_source.blit(self.image_source, (0,0), special_flags=pygame.BLEND_RGBA_MULT)
-        #self.surface.blit(self.image_source, (0, 0))
 
         pygame.display.update()
 
@@ -147,7 +142,8 @@ class CGame:
 
         for i in range(self.board.size[0] + 1):
             i = i
-            pygame.draw.line(self.surface, (255,0,0), (i * self.tile_size, 0), (i * self.tile_size, self.board.size[1] * self.tile_size))
+            pygame.draw.line(self.surface, (255, 0, 0), (i * self.tile_size, 0),
+                             (i * self.tile_size, self.board.size[1] * self.tile_size))
             # line1 = shapes.Line(i * self.tile_size, 0,i * self.tile_size, self.board.size[1] * self.tile_size, 2,color=(255, 0, 0),batch=batch)
             # batch.draw()
 
@@ -155,4 +151,3 @@ class CGame:
             i = i
             # line1 = shapes.Line(0, i * self.tile_size,self.board.size[0] * self.tile_size, i * self.tile_size, 2,color=(255, 0, 0),batch=batch)
             # batch.draw()
-
