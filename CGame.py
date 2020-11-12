@@ -27,7 +27,10 @@ class CGame:
     """
     Update interval is getting smaller value during playing. The game is getting harder then.
     """
-    update_interval = 0.5
+    update_interval = 0.45
+    MINIMAL_UPDATE_INTERVAL = 0.2
+    SPEED_UP_QUOCIENT = 1 / 10.0
+    actual_update_interval = 0.5
     timer = 0
 
     tile_size = 50
@@ -52,22 +55,6 @@ class CGame:
         pygame.display.flip()
 
         pygame.display.set_caption("Tetris")
-
-        # @self.window.event
-        # def on_key_press(symbol, modifiers):
-        #    self.input.on_key_press(symbol, modifiers)
-
-        # @self.window.event
-        # def on_key_release(symbol, modifiers):
-        #    self.input.on_key_release(symbol, modifiers)
-
-        # @self.window.event
-        # def on_draw():
-        #    self.window.clear()
-
-        #   self.draw_debug()
-
-        #   self.active_shape.draw(self.tile_size)
 
         # Create input manager using default controls.
         self.input = CInput()
@@ -99,7 +86,6 @@ class CGame:
                 elif event.type == pygame.KEYUP:
                     self.input.on_key_up(event.key)
 
-
             # Calculate delta time and convert to to seconds.
             delta_time = pygame.time.Clock().tick(60) / 1000
             self.update(delta_time)
@@ -114,7 +100,7 @@ class CGame:
     def update(self, delta_time):
         self.timer += delta_time
 
-        if self.timer > self.update_interval:
+        if self.timer > self.actual_update_interval:
             self.timer = 0
             movement = self.active_shape.move_down(self.board)
 
@@ -122,8 +108,14 @@ class CGame:
             movement = self.active_shape.move_left(self.board)
         elif self.input.get_action(EControls.action_right):
             movement = self.active_shape.move_right(self.board)
-        elif self.input.get_action(EControls.action_rotate):
+        elif self.input.is_rotating():
             movement = self.active_shape.rotate_shape(self.board)
+
+        # Speeding up
+        if self.input.is_speeding_up():
+            self.actual_update_interval = self.update_interval * self.SPEED_UP_QUOCIENT
+        else:
+            self.actual_update_interval = self.update_interval
 
     def draw(self):
         self.surface.fill((0, 0, 0))
@@ -141,13 +133,13 @@ class CGame:
         # batch = pyglet.graphics.Batch()
 
         for i in range(self.board.size[0] + 1):
-            i = i
             pygame.draw.line(self.surface, (255, 0, 0), (i * self.tile_size, 0),
                              (i * self.tile_size, self.board.size[1] * self.tile_size))
             # line1 = shapes.Line(i * self.tile_size, 0,i * self.tile_size, self.board.size[1] * self.tile_size, 2,color=(255, 0, 0),batch=batch)
             # batch.draw()
 
         for i in range(self.board.size[1] + 1):
-            i = i
+            pygame.draw.line(self.surface, (255, 0, 0), (0, i * self.tile_size),
+                             (self.board.size[0] * self.tile_size, i * self.tile_size))
             # line1 = shapes.Line(0, i * self.tile_size,self.board.size[0] * self.tile_size, i * self.tile_size, 2,color=(255, 0, 0),batch=batch)
             # batch.draw()

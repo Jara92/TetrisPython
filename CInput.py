@@ -1,8 +1,13 @@
-#import pyglet
-#from pyglet.window import key
 import pygame
+from enum import Enum
 import pygame.key
 from EControls import EControls
+
+
+class EInputState(Enum):
+    state_pressed = 0
+    state_released = 1
+    state_idling = 2
 
 
 class CInput:
@@ -10,11 +15,13 @@ class CInput:
     __default_controls = {
         EControls.action_left: pygame.K_LEFT,
         EControls.action_right: pygame.K_RIGHT,
-        EControls.action_add_speed: pygame.K_DOWN,
+        EControls.action_speed_up: pygame.K_DOWN,
         EControls.action_rotate: pygame.K_UP,
         EControls.action_pause: pygame.K_ESCAPE
     }
     __state = {}
+    __movement_idle = 0.5
+    __movement_counter = 0
 
     def __init__(self, controls: dict = None):
         # Set default layout.
@@ -23,18 +30,42 @@ class CInput:
 
         self.__controls = controls
 
+    def update(self, delta_time):
+        # if movement is on
+        movements = [EControls.action_left, EControls.action_right]
+
+        for movement in movements:
+            if self.__state[movement] == EInputState.state_idling:
+                self.__movement_counter += delta_time
+
+                if self.__movement_counter >= self.__movement_idle:
+                    self.__movement_counter = 0
+
     def change_controls(self, controls):
         self.__controls = controls
 
     def on_key_down(self, symbol):
-        for action in EControls:
-            if symbol == self.__controls[action]:
-                self.__state[action] = True
+        if symbol == self.__controls[EControls.action_rotate] and not self.get_action(EControls.action_rotate):
+            self.__state[EControls.action_rotate] = EInputState.state_pressed
+
+        else:
+            for action in EControls:
+                if symbol == self.__controls[action]:
+                    self.__state[action] = EInputState.state_pressed
 
     def on_key_up(self, symbol):
         for action in EControls:
             if symbol == self.__controls[action]:
-                self.__state[action] = False
+                self.__state[action] = EInputState.state_released
+
+    def is_rotating(self):
+        out = self.get_action(EControls.action_rotate)
+
+        self.__state[EControls.action_rotate] = EInputState.state_idling
+        return out
+
+    def is_speeding_up(self):
+        return self.get_action(EControls.action_speed_up)
 
     def get_action(self, action: EControls):
         """
@@ -42,4 +73,5 @@ class CInput:
         :param action:
         :return:
         """
-        return self.__state.get(action)
+
+        return self.__state.get(action, EInputState.state_released) == EInputState.state_pressed

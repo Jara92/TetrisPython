@@ -72,7 +72,7 @@ class CShape:
         """
 
         old_rotation = copy.deepcopy(self.shape_layout)
-        self.shape_layout = numpy.rot90(numpy.array(self.shape_layout, bool), 1, (1, 0))
+        self.shape_layout = numpy.rot90(numpy.array(self.shape_layout, bool), 1, (0, 1))
 
         # Check new location collisions.
         if self.check_collisions(board) is False:
