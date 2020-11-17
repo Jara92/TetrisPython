@@ -31,9 +31,9 @@ class CShape:
 
     def __init__(self, color, spawn_location=(5, 0)):
         self.tile_color = color
-        #self.tile_sprite = tile_image.copy()
+        # self.tile_sprite = tile_image.copy()
         # self.tile_sprite.color =
-        #self.tile_sprite.fill(CShape.__random_color(), None, pygame.BLEND_MULT)
+        # self.tile_sprite.fill(CShape.__random_color(), None, pygame.BLEND_MULT)
         self.location = spawn_location
 
         # We need some random layout for this shape.
@@ -45,11 +45,11 @@ class CShape:
         for i in range(len(self.shape_layout)):
             for j in range(len(self.shape_layout[0])):
                 # Get tile global coords.
-                tile_coords = (self.location[0] + i, self.location[1] - j)
+                tile_coords = (self.location[0] + i, self.location[1] + j)
 
                 # If tile is active in current layout and cell is not free in board
-                if self.shape_layout[j][i]:
-                    board.set_cell(tile_coords, self.tile_sprite)
+                if self.shape_layout[i][j]:
+                    board.set_cell(tile_coords, self.tile_color)
 
     def rotate_shape(self, board):
         """
@@ -140,7 +140,7 @@ class CShape:
                 tile_coords = (self.location[0] + i, self.location[1] + j)
 
                 # If tile is active in current layout and cell is not free in board
-                if self.shape_layout[j][i] and not board.cell_is_free(tile_coords):
+                if self.shape_layout[i][j] and not board.cell_is_free(tile_coords):
                     return False
 
         # Every tile is in free cell so the movement is successful.
@@ -152,18 +152,14 @@ class CShape:
                 if self.shape_layout[j][i]:
                     yield Coord(self.location[0] + i, self.location[1] + j)
 
-    def draw(self, surface: pygame.Surface, tile_size: int):
-        """
-        Draw shape using Pyglet library.
-        :param tile_size Size of one cell in gameboard in pixels.
-        :param surface: Surface to be used for drawing.
-        """
-
+    def draw(self, surface: pygame.Surface, tile_texture: pygame.image, tile_size: int):
         for i in range(len(self.shape_layout)):
             for j in range(len(self.shape_layout)):
-                if self.shape_layout[j][i]:
-                    surface.blit(self.tile_sprite, (
-                        (self.location[0] + i) * tile_size, (self.location[1] - j) * tile_size))
+                if self.shape_layout[i][j]:
+                    surface.blit(tile_texture, (
+                        (self.location[0] + i) * tile_size, (self.location[1] + j) * tile_size))
+
+
 
     @staticmethod
     def __random_shape():

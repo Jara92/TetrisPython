@@ -1,4 +1,5 @@
 import pygame
+from typing import Dict
 
 
 class CBoard:
@@ -11,12 +12,12 @@ class CBoard:
         # Define game board size and create 2D array.
         # self.game_board = [[0] * cols] * rows
         # self.__matrix = [[0] * self.size[0]] * self.size[1]
-        self.__matrix = [[pygame.Surface for x in range(self.size[1])] for y in range(self.size[0])]
+        self.__matrix = [[-1 for x in range(self.size[1])] for y in range(self.size[0])]
 
         # Fill new matrix by None value.
         for i in range(self.size[0]):
             for j in range(self.size[1]):
-                self.__matrix[i][j] = None
+                self.__matrix[i][j] = -1
 
     def cell_is_out_of_board(self, coords):
         """
@@ -26,7 +27,6 @@ class CBoard:
         """
 
         if coords[0] < 0 or coords[0] >= self.size[0] or coords[1] < 0 or coords[1] >= self.size[1]:
-            print("out of board")
             return True
         else:
             return False
@@ -44,14 +44,14 @@ class CBoard:
             # raise Exception("Sorry, invalid coords argument: " + str(coords))
 
         # print(str(coords))
-        return self.__matrix[coords[0]][coords[1]] is not -1
+        return self.__matrix[coords[0]][coords[1]] is -1
 
-    def set_cell(self, coords, sprite: pygame.image):
+    def set_cell(self, coords, color: int):
         if self.cell_is_free(coords):
-            self.__matrix[coords[0]][coords[1]] = sprite
+            self.__matrix[coords[0]][coords[1]] = color
 
-    def draw(self, surface: pygame.Surface, tile_size: int):
+    def draw(self, surface: pygame.Surface, tile_textures: Dict, tile_size: int):
         for i in range(self.size[0]):
             for j in range(self.size[1]):
-                if self.__matrix[i][j] is not None:
-                    surface.blit(self.__matrix[i][j], (i * tile_size, j * tile_size))
+                if self.__matrix[i][j] is not -1:
+                    surface.blit(tile_textures[self.__matrix[i][j]], (i * tile_size, j * tile_size))

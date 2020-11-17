@@ -147,13 +147,14 @@ class CGame:
         self.surface.fill((0, 0, 0))
         self.draw_debug()
 
-        self.board.draw(self.surface, self.tile_size)
+        self.board.draw(self.surface, self.__tile_textures, self.tile_size)
         # self.active_shape.draw(self.surface, self.tile_size)
+        self.active_shape.draw(self.surface, self.__tile_textures[self.active_shape.tile_color], self.tile_size)
 
         # Print all tiles in active shape using its color
-        for tile in self.active_shape.get_tiles():
-            self.surface.blit(self.__tile_textures[self.active_shape.tile_color], (
-                tile.x * self.tile_size, tile.y * self.tile_size))
+        #for tile in self.active_shape.get_tiles():
+        #    self.surface.blit(self.__tile_textures[self.active_shape.tile_color], (
+        #        tile.x * self.tile_size, tile.y * self.tile_size))
 
         pygame.display.update()
 
