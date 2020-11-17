@@ -3,6 +3,7 @@
 from pyglet.window import key
 from random import randint
 import pygame
+from NamedTupples import Coord
 from pygame import display
 
 from EApplicationState import ApplicationState
@@ -47,6 +48,9 @@ class CGame:
     next_shape = None
     tile_sprite = None
 
+    game_board_spawn_location = None
+    next_shape_spawn_location = None
+
     surface = None
     window_size = (500, 650)
     input = None
@@ -68,6 +72,7 @@ class CGame:
 
         # Create new board.
         self.board = CBoard()
+        self.game_board_spawn_location = Coord(self.board.size[0] // 2, 0)
 
         # Load tile image from resources.
         self.image_source = pygame.image.load('assets/img/tile.png')
@@ -75,6 +80,7 @@ class CGame:
         # Create sprite and scale it to self.cell_size size in pixels.
         self.image_source = pygame.transform.scale(self.image_source, (self.tile_size, self.tile_size))
 
+        # Preload textures for every color.
         i = 0
         for color in self.__colors:
             tile_texture = self.image_source.copy()
@@ -83,8 +89,8 @@ class CGame:
 
             i = i + 1
 
-        # Define first shape
-        self.active_shape = CShape(self.__random_color(), (self.board.size[0] // 2, 1))
+        # Define first 2 shapes.
+        self.active_shape = CShape(self.__random_color(), self.game_board_spawn_location)
 
     def run(self):
         self.prepare_game()
@@ -137,10 +143,13 @@ class CGame:
     def load_next_shape(self):
         # Store current shape into board.
         self.active_shape.store(self.board)
-        #self.board.store(self.active_shape)
 
         # load new shape
-        self.active_shape = CShape(self.__random_color(), (self.board.size[0] // 2, 1))
+        self.active_shape = CShape(self.__random_color(), self.game_board_spawn_location)
+
+        if self.active_shape.check_collisions(self.board) is False:
+            game_over = True
+            #Game ends now.
 
         # Check collisison
 
@@ -148,14 +157,8 @@ class CGame:
         self.surface.fill((0, 0, 0))
         self.draw_debug()
 
-        self.board.draw(self.surface, self.__tile_textures, self.tile_size)
-        # self.active_shape.draw(self.surface, self.tile_size)
         self.active_shape.draw(self.surface, self.__tile_textures[self.active_shape.tile_color], self.tile_size)
-
-        # Print all tiles in active shape using its color
-        #for tile in self.active_shape.get_tiles():
-        #    self.surface.blit(self.__tile_textures[self.active_shape.tile_color], (
-        #        tile.x * self.tile_size, tile.y * self.tile_size))
+        self.board.draw(self.surface, self.__tile_textures, self.tile_size)
 
         pygame.display.update()
 
