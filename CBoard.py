@@ -51,6 +51,43 @@ class CBoard:
         if self.cell_is_free(coords):
             self.__matrix[coords.x][coords.y] = color
 
+    def update(self, delta_time: float):
+        # Check rows while the row before was full
+        score = 0
+        y = self.size.y - 1
+        running = True
+
+        # While rows are full and y coord is ge 0
+        while running and y >= 0:
+            row_is_full = True
+            # Check if row is full
+            for i in range(self.size.x):
+                # if there is one -1 item, the row is not full
+                if self.__matrix[i][y] is -1:
+                    row_is_full = False
+
+            # We will increse score and shift board if row is full
+            if row_is_full:
+                score += self.shift_board()
+            # In other cases will leave while cycle
+            else:
+                running = False
+
+        return score
+
+    def shift_board(self):
+        # Ever row
+        # TODO: problém pokud potřebnuji shifnout od řádku, který není úplně dole
+        for y in range(self.size.y - 1, 0, -1):
+            if y - 1 >= 0:
+                for x in range(self.size.x):
+                    self.__matrix[x][y] = self.__matrix[x][y-1]
+            else:
+                for x in range(self.size.x):
+                    self.__matrix[x][y] = -1
+
+        return 50
+
     def draw(self, surface: pygame.Surface, tile_textures: Dict, tile_size: int):
         for i in range(self.size.x):
             for j in range(self.size.y):

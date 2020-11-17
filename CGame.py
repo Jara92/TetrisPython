@@ -54,7 +54,9 @@ class CGame:
     surface = None
     window_size = Coord(500, 650)
     input = None
-    image_source = None
+    tile_texture = None
+
+    score = 0
 
     # Prepare new game.
     def prepare_game(self, window_width=500, window_height=650, tile_size=30):
@@ -75,15 +77,15 @@ class CGame:
         self.game_board_spawn_location = Coord(self.board.size.x // 2, 0)
 
         # Load tile image from resources.
-        self.image_source = pygame.image.load('assets/img/tile.png')
+        self.tile_texture = pygame.image.load('assets/img/tile.png')
 
         # Create sprite and scale it to self.cell_size size in pixels.
-        self.image_source = pygame.transform.scale(self.image_source, (self.tile_size, self.tile_size))
+        self.tile_texture = pygame.transform.scale(self.tile_texture, (self.tile_size, self.tile_size))
 
         # Preload textures for every color.
         i = 0
         for color in self.__colors:
-            tile_texture = self.image_source.copy()
+            tile_texture = self.tile_texture.copy()
             self.__tile_textures[i] = tile_texture
             tile_texture.fill(color, None, pygame.BLEND_MULT)
 
@@ -118,6 +120,7 @@ class CGame:
     # Update game state.
     def update(self, delta_time):
         self.timer += delta_time
+        self.input.update(delta_time)
 
         if self.timer > self.actual_update_interval:
             self.timer = 0
@@ -127,9 +130,9 @@ class CGame:
             if movement is False:
                 self.load_next_shape()
 
-        if self.input.get_action(EControls.action_left):
+        if self.input.is_moving_left():
             movement = self.active_shape.move_left(self.board)
-        elif self.input.get_action(EControls.action_right):
+        elif self.input.is_moving_right():
             movement = self.active_shape.move_right(self.board)
         elif self.input.is_rotating():
             movement = self.active_shape.rotate_shape(self.board)
@@ -139,6 +142,8 @@ class CGame:
             self.actual_update_interval = self.update_interval * self.SPEED_UP_QUOCIENT
         else:
             self.actual_update_interval = self.update_interval
+
+        self.score += self.board.update(delta_time)
 
     def load_next_shape(self):
         # Store current shape into board.
@@ -167,19 +172,13 @@ class CGame:
         Draw debug matrix and other debugging objects.
         """
 
-        # batch = pyglet.graphics.Batch()
-
         for i in range(self.board.size.x + 1):
             pygame.draw.line(self.surface, (255, 0, 0), (i * self.tile_size, 0),
                              (i * self.tile_size, self.board.size.y * self.tile_size))
-            # line1 = shapes.Line(i * self.tile_size, 0,i * self.tile_size, self.board.size[1] * self.tile_size, 2,color=(255, 0, 0),batch=batch)
-            # batch.draw()
 
         for i in range(self.board.size.y + 1):
             pygame.draw.line(self.surface, (255, 0, 0), (0, i * self.tile_size),
                              (self.board.size.x * self.tile_size, i * self.tile_size))
-            # line1 = shapes.Line(0, i * self.tile_size,self.board.size[0] * self.tile_size, i * self.tile_size, 2,color=(255, 0, 0),batch=batch)
-            # batch.draw()
 
     @staticmethod
     def __random_color():

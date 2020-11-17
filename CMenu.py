@@ -6,6 +6,6 @@ class CMenu:
     def __init__(self):
         a = 5
     def run(self):
-        print("running")
+        #print("running")
 
         return ApplicationState.APPLICATION_STATE_EXIT

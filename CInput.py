@@ -20,7 +20,7 @@ class CInput:
         EControls.action_pause: pygame.K_ESCAPE
     }
     __state = {}
-    __movement_idle = 0.5
+    __movement_idle = 0.035
     __movement_counter = 0
 
     def __init__(self, controls: dict = None):
@@ -35,7 +35,7 @@ class CInput:
         movements = [EControls.action_left, EControls.action_right]
 
         for movement in movements:
-            if self.__state[movement] == EInputState.state_idling:
+            if self.__state.get(movement, EInputState.state_released) == EInputState.state_idling:
                 self.__movement_counter += delta_time
 
                 if self.__movement_counter >= self.__movement_idle:
@@ -66,6 +66,29 @@ class CInput:
 
     def is_speeding_up(self):
         return self.get_action(EControls.action_speed_up)
+
+    def is_moving_left(self):
+        if self.__state.get(EControls.action_left, EInputState.state_released) == EInputState.state_idling and self.__movement_counter is 0:
+            self.__state[EControls.action_left] = EInputState.state_idling
+            return True
+
+        if self.__state.get(EControls.action_left, EInputState.state_released) == EInputState.state_pressed:
+            self.__state[EControls.action_left] = EInputState.state_idling
+            self.__movement_counter = -0.06
+            return True
+
+        return False
+
+    def is_moving_right(self):
+        if self.__state.get(EControls.action_right, EInputState.state_released) == EInputState.state_idling and self.__movement_counter is 0:
+            #self.__state[EControls.action_right] = EInputState.state_idling
+            return True
+        if self.__state.get(EControls.action_right, EInputState.state_released) == EInputState.state_pressed:
+            self.__state[EControls.action_right] = EInputState.state_idling
+            self.__movement_counter = -0.06
+            return True
+
+        return False
 
     def get_action(self, action: EControls):
         """
