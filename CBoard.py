@@ -65,20 +65,24 @@ class CBoard:
                 # if there is one -1 item, the row is not full
                 if self.__matrix[i][y] is -1:
                     row_is_full = False
+                    break
 
             # We will increse score and shift board if row is full
             if row_is_full:
-                score += self.shift_board()
+                score += self.shift_board(y)
             # In other cases will leave while cycle
             else:
-                running = False
+                a = 5
+                #running = False
+
+            y = y - 1
 
         return score
 
-    def shift_board(self):
+    def shift_board(self, y:int):
         # Ever row
         # TODO: problém pokud potřebnuji shifnout od řádku, který není úplně dole
-        for y in range(self.size.y - 1, 0, -1):
+        for y in range(y, 0, -1):
             if y - 1 >= 0:
                 for x in range(self.size.x):
                     self.__matrix[x][y] = self.__matrix[x][y-1]

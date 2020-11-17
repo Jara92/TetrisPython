@@ -11,6 +11,7 @@ class EInputState(Enum):
 
 
 class CInput:
+    INPUT_HOLD_DELAY = -0.06
     __controls = None
     __default_controls = {
         EControls.action_left: pygame.K_LEFT,
@@ -20,7 +21,7 @@ class CInput:
         EControls.action_pause: pygame.K_ESCAPE
     }
     __state = {}
-    __movement_idle = 0.035
+    __movement_idle = 0.045
     __movement_counter = 0
 
     def __init__(self, controls: dict = None):
@@ -67,28 +68,31 @@ class CInput:
     def is_speeding_up(self):
         return self.get_action(EControls.action_speed_up)
 
-    def is_moving_left(self):
-        if self.__state.get(EControls.action_left, EInputState.state_released) == EInputState.state_idling and self.__movement_counter is 0:
-            self.__state[EControls.action_left] = EInputState.state_idling
+    def __is_moving(self, action):
+        # Get Action state
+        action_state = self.__state.get(action, EInputState.state_released)
+
+        # If key is being hold and movement timer is 0
+        if action_state == EInputState.state_idling and self.__movement_counter is 0:
             return True
 
-        if self.__state.get(EControls.action_left, EInputState.state_released) == EInputState.state_pressed:
-            self.__state[EControls.action_left] = EInputState.state_idling
-            self.__movement_counter = -0.06
+        # key was pressed now
+        elif action_state == EInputState.state_pressed:
+            # Mark key as being hold
+            self.__state[action] = EInputState.state_idling
+
+            # Next movement will be little bit delayed
+            self.__movement_counter = CInput.INPUT_HOLD_DELAY
+
             return True
 
         return False
+
+    def is_moving_left(self):
+        return self.__is_moving(EControls.action_left)
 
     def is_moving_right(self):
-        if self.__state.get(EControls.action_right, EInputState.state_released) == EInputState.state_idling and self.__movement_counter is 0:
-            #self.__state[EControls.action_right] = EInputState.state_idling
-            return True
-        if self.__state.get(EControls.action_right, EInputState.state_released) == EInputState.state_pressed:
-            self.__state[EControls.action_right] = EInputState.state_idling
-            self.__movement_counter = -0.06
-            return True
-
-        return False
+        return self.__is_moving(EControls.action_right)
 
     def get_action(self, action: EControls):
         """
