@@ -73,23 +73,26 @@ class CBoard:
             # In other cases will leave while cycle
             else:
                 a = 5
-                #running = False
+                # running = False
 
             y = y - 1
 
         return score
 
-    def shift_board(self, y:int):
-        # Ever row
-        # TODO: problém pokud potřebnuji shifnout od řádku, který není úplně dole
+    def shift_board(self, y: int):
+        # Check every row
         for y in range(y, 0, -1):
+            # if there is another row over this row
             if y - 1 >= 0:
+                # Move upper row down
                 for x in range(self.size.x):
-                    self.__matrix[x][y] = self.__matrix[x][y-1]
+                    self.__matrix[x][y] = self.__matrix[x][y - 1]
             else:
+                # Clear the last row
                 for x in range(self.size.x):
                     self.__matrix[x][y] = -1
 
+        # TODO: Score should be based on row colors.
         return 50
 
     def draw(self, surface: pygame.Surface, tile_textures: Dict, tile_size: int):
