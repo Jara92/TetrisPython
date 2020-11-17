@@ -1,7 +1,7 @@
 # import pyglet
 # from pyglet import window, shapes
 from pyglet.window import key
-
+from random import randint
 import pygame
 from pygame import display
 
@@ -24,6 +24,13 @@ def to_pygame(coords, height):
 
 
 class CGame:
+    """
+    Colors description.
+    white|orange|red|green|blue|gold
+    """
+    __colors = [(255, 255, 255), (255, 128, 0), (178, 34, 34), (50, 205, 50), (0, 191, 255), (255, 215, 0)]
+
+    __tile_textures = {}
     """
     Update interval is getting smaller value during playing. The game is getting harder then.
     """
@@ -68,8 +75,16 @@ class CGame:
         # Create sprite and scale it to self.cell_size size in pixels.
         self.image_source = pygame.transform.scale(self.image_source, (self.tile_size, self.tile_size))
 
+        i = 0
+        for color in self.__colors:
+            tile_texture = self.image_source.copy()
+            self.__tile_textures[i] = tile_texture
+            tile_texture.fill(color, None, pygame.BLEND_MULT)
+
+            i = i + 1
+
         # Define first shape
-        self.active_shape = CShape(self.image_source, (self.board.size[0] // 2, 1))
+        self.active_shape = CShape(self.__random_color(), (self.board.size[0] // 2, 1))
 
     def run(self):
         self.prepare_game()
@@ -106,7 +121,6 @@ class CGame:
             if movement is False:
                 self.load_next_shape()
 
-
         if self.input.get_action(EControls.action_left):
             movement = self.active_shape.move_left(self.board)
         elif self.input.get_action(EControls.action_right):
@@ -125,17 +139,21 @@ class CGame:
         self.active_shape.store(self.board)
 
         # load new shape
-        self.active_shape = CShape(self.image_source, (self.board.size[0] // 2, 1))
+        self.active_shape = CShape(self.__random_color(), (self.board.size[0] // 2, 1))
 
         # Check collisison
-
 
     def draw(self):
         self.surface.fill((0, 0, 0))
         self.draw_debug()
 
         self.board.draw(self.surface, self.tile_size)
-        self.active_shape.draw(self.surface, self.tile_size)
+        # self.active_shape.draw(self.surface, self.tile_size)
+
+        # Print all tiles in active shape using its color
+        for tile in self.active_shape.get_tiles():
+            self.surface.blit(self.__tile_textures[self.active_shape.tile_color], (
+                tile.x * self.tile_size, tile.y * self.tile_size))
 
         pygame.display.update()
 
@@ -157,3 +175,16 @@ class CGame:
                              (self.board.size[0] * self.tile_size, i * self.tile_size))
             # line1 = shapes.Line(0, i * self.tile_size,self.board.size[0] * self.tile_size, i * self.tile_size, 2,color=(255, 0, 0),batch=batch)
             # batch.draw()
+
+    @staticmethod
+    def __random_color():
+        """
+        Return random color in __colors.
+        @:returns Random color.
+        """
+
+        # Generate random index in color list - We want new random color.
+        random_index = randint(0, len(CGame.__colors) - 1)
+
+        return random_index
+        #return CGame.__colors[random_index]

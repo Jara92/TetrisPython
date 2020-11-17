@@ -26,6 +26,7 @@ class CBoard:
         """
 
         if coords[0] < 0 or coords[0] >= self.size[0] or coords[1] < 0 or coords[1] >= self.size[1]:
+            print("out of board")
             return True
         else:
             return False
@@ -43,7 +44,7 @@ class CBoard:
             # raise Exception("Sorry, invalid coords argument: " + str(coords))
 
         # print(str(coords))
-        return self.__matrix[coords[0]][coords[1]] is None
+        return self.__matrix[coords[0]][coords[1]] is not -1
 
     def set_cell(self, coords, sprite: pygame.image):
         if self.cell_is_free(coords):

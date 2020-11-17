@@ -22,22 +22,18 @@ class CShape:
                 [[True, True], [True, True]],
                 [[False, False, False, False], [False, False, False, False], [True, True, True, True],
                  [False, False, False, False]]]
-    """
-    Colors description.
-    white|orange|red|green|blue|gold
-    """
-    __colors = [(255, 255, 255), (255, 128, 0), (178, 34, 34), (50, 205, 50), (0, 191, 255), (255, 215, 0)]
+
     __shape_state = None
     shape_layout = None
     location = (5, 0)
     tile_sprite = None
     tile_color = None
 
-    def __init__(self, tile_image: pygame.image, spawn_location=(5, 0)):
-        # TODO add tile_sprite type
-        self.tile_sprite = tile_image.copy()
+    def __init__(self, color, spawn_location=(5, 0)):
+        self.tile_color = color
+        #self.tile_sprite = tile_image.copy()
         # self.tile_sprite.color =
-        self.tile_sprite.fill(CShape.__random_color(), None, pygame.BLEND_MULT)
+        #self.tile_sprite.fill(CShape.__random_color(), None, pygame.BLEND_MULT)
         self.location = spawn_location
 
         # We need some random layout for this shape.
@@ -141,7 +137,7 @@ class CShape:
         for i in range(len(self.shape_layout)):
             for j in range(len(self.shape_layout[0])):
                 # Get tile global coords.
-                tile_coords = (self.location[0] + i, self.location[1] - j)
+                tile_coords = (self.location[0] + i, self.location[1] + j)
 
                 # If tile is active in current layout and cell is not free in board
                 if self.shape_layout[j][i] and not board.cell_is_free(tile_coords):
@@ -149,6 +145,12 @@ class CShape:
 
         # Every tile is in free cell so the movement is successful.
         return True
+
+    def get_tiles(self):
+        for i in range(len(self.shape_layout)):
+            for j in range(len(self.shape_layout)):
+                if self.shape_layout[j][i]:
+                    yield Coord(self.location[0] + i, self.location[1] + j)
 
     def draw(self, surface: pygame.Surface, tile_size: int):
         """
@@ -174,15 +176,3 @@ class CShape:
         random_index = randint(0, len(CShape.__shapes) - 1)
 
         return CShape.__shapes[random_index]
-
-    @staticmethod
-    def __random_color():
-        """
-        Return random color in __colors.
-        @:returns Random color.
-        """
-
-        # Generate random index in color list - We want new random color.
-        random_index = randint(0, len(CShape.__colors) - 1)
-
-        return CShape.__colors[random_index]
