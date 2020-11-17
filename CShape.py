@@ -26,14 +26,10 @@ class CShape:
     __shape_state = None
     shape_layout = None
     location = (5, 0)
-    tile_sprite = None
     tile_color = None
 
     def __init__(self, color, spawn_location=(5, 0)):
         self.tile_color = color
-        # self.tile_sprite = tile_image.copy()
-        # self.tile_sprite.color =
-        # self.tile_sprite.fill(CShape.__random_color(), None, pygame.BLEND_MULT)
         self.location = spawn_location
 
         # We need some random layout for this shape.
@@ -57,6 +53,7 @@ class CShape:
         @param board Game board.
         """
 
+        # Rotate 90° right
         old_rotation = copy.deepcopy(self.shape_layout)
         self.shape_layout = numpy.rot90(numpy.array(self.shape_layout, bool), 1, (0, 1))
 
@@ -86,7 +83,7 @@ class CShape:
 
         movement_direction = (0, 1)
 
-        return self.move(board, movement_direction)
+        return self.__move(board, movement_direction)
 
     def move_left(self, board: CBoard):
         """
@@ -97,7 +94,7 @@ class CShape:
 
         movement_direction = (-1, 0)
 
-        return self.move(board, movement_direction)
+        return self.__move(board, movement_direction)
 
     def move_right(self, board: CBoard):
         """
@@ -108,9 +105,9 @@ class CShape:
 
         movement_direction = (1, 0)
 
-        return self.move(board, movement_direction)
+        return self.__move(board, movement_direction)
 
-    def move(self, board: CBoard, direction: Tuple[int, int]):
+    def __move(self, board: CBoard, direction: Tuple[int, int]):
         """
         Move the shape. We need to verify that we are not colliding in @board.
         :param board: Board Game board.
@@ -134,14 +131,13 @@ class CShape:
 
     def check_collisions(self, board: CBoard):
         # Check collisions.
-        for i in range(len(self.shape_layout)):
-            for j in range(len(self.shape_layout[0])):
-                # Get tile global coords.
-                tile_coords = (self.location[0] + i, self.location[1] + j)
+        for tile in self.get_tiles():
+            # Get tile global coords.
+            tile_coords = (self.location[0] + tile.x, self.location[1] + tile.y)
 
-                # If tile is active in current layout and cell is not free in board
-                if self.shape_layout[i][j] and not board.cell_is_free(tile_coords):
-                    return False
+            # If tile is active in current layout and cell is not free in board
+            if self.shape_layout[tile.x][tile.y] and not board.cell_is_free(tile_coords):
+                return False
 
         # Every tile is in free cell so the movement is successful.
         return True
@@ -149,17 +145,17 @@ class CShape:
     def get_tiles(self):
         for i in range(len(self.shape_layout)):
             for j in range(len(self.shape_layout)):
-                if self.shape_layout[j][i]:
-                    yield Coord(self.location[0] + i, self.location[1] + j)
+                if self.shape_layout[i][j]:
+                    yield Coord(i, j)
+
+    def get_global_tiles(self):
+        for tile in self.get_tiles():
+            yield Coord(tile.x + self.location[0], tile.y + self.location[1])
 
     def draw(self, surface: pygame.Surface, tile_texture: pygame.image, tile_size: int):
-        for i in range(len(self.shape_layout)):
-            for j in range(len(self.shape_layout)):
-                if self.shape_layout[i][j]:
-                    surface.blit(tile_texture, (
-                        (self.location[0] + i) * tile_size, (self.location[1] + j) * tile_size))
-
-
+        for tile in self.get_tiles():
+            surface.blit(tile_texture, (
+                (self.location[0] + tile.x) * tile_size, (self.location[1] + tile.y) * tile_size))
 
     @staticmethod
     def __random_shape():

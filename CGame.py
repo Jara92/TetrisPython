@@ -137,6 +137,7 @@ class CGame:
     def load_next_shape(self):
         # Store current shape into board.
         self.active_shape.store(self.board)
+        #self.board.store(self.active_shape)
 
         # load new shape
         self.active_shape = CShape(self.__random_color(), (self.board.size[0] // 2, 1))

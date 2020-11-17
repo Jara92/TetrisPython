@@ -50,6 +50,11 @@ class CBoard:
         if self.cell_is_free(coords):
             self.__matrix[coords[0]][coords[1]] = color
 
+    def store(self, shape:CShape):
+        for tile in shape.get_global_tiles():
+            if self.cell_is_free(tile):
+                self.__matrix[tile.x][tile.y] = shape.tile_color
+
     def draw(self, surface: pygame.Surface, tile_textures: Dict, tile_size: int):
         for i in range(self.size[0]):
             for j in range(self.size[1]):
