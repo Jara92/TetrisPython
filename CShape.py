@@ -24,28 +24,30 @@ class CShape:
                  [False, False, False, False]]]
 
     __shape_state = None
-    shape_layout = None
-    location = (5, 0)
-    tile_color = None
+    layout = None
+    location = Coord(5, 0)
+    color = None
 
-    def __init__(self, color, spawn_location=(5, 0)):
-        self.tile_color = color
+    def __init__(self, color: int = 0, spawn_location: Coord = Coord(5, 0)):
+        self.color = color
         self.location = spawn_location
 
         # We need some random layout for this shape.
         # Deep copy needed because we will rotate the shape.
-        self.shape_layout = copy.deepcopy(CShape.__random_shape())
+        self.layout = copy.deepcopy(CShape.__random_shape())
 
     def store(self, board: CBoard):
-        # Check collisions.
-        for i in range(len(self.shape_layout)):
-            for j in range(len(self.shape_layout[0])):
-                # Get tile global coords.
-                tile_coords = (self.location[0] + i, self.location[1] + j)
+        """
+        Store this shape in given board.
+        :param board: Board to be used
+        :return:
+        """
+        for tile in self.__get_tiles():
+            # Get tile global coords.
+            tile_coords = Coord(self.location.x + tile.x, self.location.y + tile.y)
 
-                # If tile is active in current layout and cell is not free in board
-                if self.shape_layout[i][j]:
-                    board.set_cell(tile_coords, self.tile_color)
+            # If tile is active in current layout and cell is not free in board
+            board.set_cell(tile_coords, self.color)
 
     def rotate_shape(self, board):
         """
@@ -54,13 +56,13 @@ class CShape:
         """
 
         # Rotate 90° right
-        old_rotation = copy.deepcopy(self.shape_layout)
-        self.shape_layout = numpy.rot90(numpy.array(self.shape_layout, bool), 1, (0, 1))
+        old_rotation = copy.deepcopy(self.layout)
+        self.layout = numpy.rot90(numpy.array(self.layout, bool), 1, (0, 1))
 
         # Check new location collisions.
         if self.check_collisions(board) is False:
             # Reset location and return False, because the movement was not successful.
-            self.shape_layout = old_rotation
+            self.layout = old_rotation
             return False
 
         return True
@@ -70,9 +72,9 @@ class CShape:
         Print shape layout.
         """
 
-        N = len(self.shape_layout[0])
+        N = len(self.layout[0])
         for i in range(N):
-            print(self.shape_layout[i])
+            print(self.layout[i])
 
     def move_down(self, board: CBoard):
         """
@@ -81,7 +83,7 @@ class CShape:
         :return: True - success; False - we are colliding with something.
         """
 
-        movement_direction = (0, 1)
+        movement_direction = Coord(0, 1)
 
         return self.__move(board, movement_direction)
 
@@ -92,7 +94,7 @@ class CShape:
         :return: True - success; False - we are colliding with something.
         """
 
-        movement_direction = (-1, 0)
+        movement_direction = Coord(-1, 0)
 
         return self.__move(board, movement_direction)
 
@@ -103,7 +105,7 @@ class CShape:
         :return: True - success; False - we are colliding with something.
         """
 
-        movement_direction = (1, 0)
+        movement_direction = Coord(1, 0)
 
         return self.__move(board, movement_direction)
 
@@ -119,7 +121,7 @@ class CShape:
         old_location = self.location
 
         # Make the move.
-        self.location = (self.location[0] + direction[0], self.location[1] + direction[1])
+        self.location = Coord(self.location.x + direction.x, self.location.y + direction.y)
 
         # Check new location collisions.
         if self.check_collisions(board) is False:
@@ -130,32 +132,51 @@ class CShape:
         return True
 
     def check_collisions(self, board: CBoard):
-        # Check collisions.
-        for tile in self.get_tiles():
+        """
+        Check shape collisions.
+        :param board: Board to be used.
+        :return: True - Shape is colliding with board
+        """
+        for tile in self.__get_tiles():
             # Get tile global coords.
-            tile_coords = (self.location[0] + tile.x, self.location[1] + tile.y)
+            tile_coords = Coord(self.location.x + tile.x, self.location.y + tile.y)
 
             # If tile is active in current layout and cell is not free in board
-            if self.shape_layout[tile.x][tile.y] and not board.cell_is_free(tile_coords):
+            if self.layout[tile.x][tile.y] and not board.cell_is_free(tile_coords):
                 return False
 
         # Every tile is in free cell so the movement is successful.
         return True
 
-    def get_tiles(self):
-        for i in range(len(self.shape_layout)):
-            for j in range(len(self.shape_layout)):
-                if self.shape_layout[i][j]:
+    def __get_tiles(self):
+        """
+        Return all active tiles in this shape (returns local coordinates).
+        :return: All active tiles.
+        """
+        for i in range(len(self.layout)):
+            for j in range(len(self.layout)):
+                if self.layout[i][j]:
                     yield Coord(i, j)
 
     def get_global_tiles(self):
-        for tile in self.get_tiles():
-            yield Coord(tile.x + self.location[0], tile.y + self.location[1])
+        """
+        Return all active tiles in this shape (returns global coordinates).
+        :return: All active tiles.
+        """
+        for tile in self.__get_tiles():
+            yield Coord(tile.x + self.location.x, tile.y + self.location.y)
 
     def draw(self, surface: pygame.Surface, tile_texture: pygame.image, tile_size: int):
-        for tile in self.get_tiles():
+        """
+        Draw shape in given surface.
+        :param surface: Surface to be used.
+        :param tile_texture: Single tile texture to be used.
+        :param tile_size: Single tile texture size.
+        :return:
+        """
+        for tile in self.__get_tiles():
             surface.blit(tile_texture, (
-                (self.location[0] + tile.x) * tile_size, (self.location[1] + tile.y) * tile_size))
+                (self.location.x + tile.x) * tile_size, (self.location.y + tile.y) * tile_size))
 
     @staticmethod
     def __random_shape():

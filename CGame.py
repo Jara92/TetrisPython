@@ -52,13 +52,13 @@ class CGame:
     next_shape_spawn_location = None
 
     surface = None
-    window_size = (500, 650)
+    window_size = Coord(500, 650)
     input = None
     image_source = None
 
     # Prepare new game.
     def prepare_game(self, window_width=500, window_height=650, tile_size=30):
-        self.window_size = (window_width, window_height)
+        self.window_size = Coord(window_width, window_height)
         self.tile_size = tile_size
 
         # Create window and flip it
@@ -72,7 +72,7 @@ class CGame:
 
         # Create new board.
         self.board = CBoard()
-        self.game_board_spawn_location = Coord(self.board.size[0] // 2, 0)
+        self.game_board_spawn_location = Coord(self.board.size.x // 2, 0)
 
         # Load tile image from resources.
         self.image_source = pygame.image.load('assets/img/tile.png')
@@ -157,7 +157,7 @@ class CGame:
         self.surface.fill((0, 0, 0))
         self.draw_debug()
 
-        self.active_shape.draw(self.surface, self.__tile_textures[self.active_shape.tile_color], self.tile_size)
+        self.active_shape.draw(self.surface, self.__tile_textures[self.active_shape.color], self.tile_size)
         self.board.draw(self.surface, self.__tile_textures, self.tile_size)
 
         pygame.display.update()
@@ -169,15 +169,15 @@ class CGame:
 
         # batch = pyglet.graphics.Batch()
 
-        for i in range(self.board.size[0] + 1):
+        for i in range(self.board.size.x + 1):
             pygame.draw.line(self.surface, (255, 0, 0), (i * self.tile_size, 0),
-                             (i * self.tile_size, self.board.size[1] * self.tile_size))
+                             (i * self.tile_size, self.board.size.y * self.tile_size))
             # line1 = shapes.Line(i * self.tile_size, 0,i * self.tile_size, self.board.size[1] * self.tile_size, 2,color=(255, 0, 0),batch=batch)
             # batch.draw()
 
-        for i in range(self.board.size[1] + 1):
+        for i in range(self.board.size.y + 1):
             pygame.draw.line(self.surface, (255, 0, 0), (0, i * self.tile_size),
-                             (self.board.size[0] * self.tile_size, i * self.tile_size))
+                             (self.board.size.x * self.tile_size, i * self.tile_size))
             # line1 = shapes.Line(0, i * self.tile_size,self.board.size[0] * self.tile_size, i * self.tile_size, 2,color=(255, 0, 0),batch=batch)
             # batch.draw()
 
