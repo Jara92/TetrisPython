@@ -38,6 +38,8 @@ class CGame:
     """
     Update interval is getting smaller value during playing. The game is getting harder then.
     """
+
+    __font = 'assets/fonts/zorque.ttf'
     update_interval = 0.45
     MINIMAL_UPDATE_INTERVAL = 0.2
     SPEED_UP_QUOCIENT = 1 / 10.0
@@ -172,9 +174,13 @@ class CGame:
         self.active_shape.draw(self.surface, self.__tile_textures[self.active_shape.color], self.tile_size)
         self.board.draw(self.surface, self.__tile_textures, self.tile_size)
 
-        fontnam = pygame.font.Font('assets/fonts/zorque.ttf', 32)
-        text = fontnam.render("Score: " + str(self.score), True, (255, 255, 255))
+        #Render text
+        font = pygame.font.Font(self.__font, 32)
+        text = font.render("Score: " + str(self.score), True, (255, 255, 255))
         self.surface.blit(text, (10, 5 + self.board.size.y * self.tile_size))
+
+        text = font.render("Next: ", True, (255, 255, 255))
+        self.surface.blit(text, (10 + self.board.size.x * self.tile_size, 5))
 
         pygame.display.update()
 
