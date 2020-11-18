@@ -1,6 +1,9 @@
 # import pyglet
 # from pyglet import window, shapes
+import os
+
 from pyglet.window import key
+import random
 from random import randint
 import pygame
 from NamedTupples import Coord
@@ -59,7 +62,7 @@ class CGame:
     score = 0
 
     # Prepare new game.
-    def prepare_game(self, window_width=500, window_height=650, tile_size=30):
+    def prepare_game(self, window_width=600, window_height=650, tile_size=30):
         self.window_size = Coord(window_width, window_height)
         self.tile_size = tile_size
 
@@ -68,6 +71,8 @@ class CGame:
         pygame.display.flip()
 
         pygame.display.set_caption("Tetris")
+
+        random.seed(os.urandom(9999999))
 
         # Create input manager using default controls.
         self.input = CInput()
@@ -96,6 +101,8 @@ class CGame:
 
     def run(self):
         self.prepare_game()
+
+        pygame.init()
 
         running = True
         while running:
@@ -154,7 +161,7 @@ class CGame:
 
         if self.active_shape.check_collisions(self.board) is False:
             game_over = True
-            #Game ends now.
+            # Game ends now.
 
         # Check collisison
 
@@ -164,6 +171,10 @@ class CGame:
 
         self.active_shape.draw(self.surface, self.__tile_textures[self.active_shape.color], self.tile_size)
         self.board.draw(self.surface, self.__tile_textures, self.tile_size)
+
+        fontnam = pygame.font.Font('assets/fonts/zorque.ttf', 32)
+        text = fontnam.render("Score: " + str(self.score), True, (255, 255, 255))
+        self.surface.blit(text, (10, 5 + self.board.size.y * self.tile_size))
 
         pygame.display.update()
 
@@ -191,4 +202,4 @@ class CGame:
         random_index = randint(0, len(CGame.__colors) - 1)
 
         return random_index
-        #return CGame.__colors[random_index]
+        # return CGame.__colors[random_index]
