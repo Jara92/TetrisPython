@@ -54,7 +54,7 @@ class CShape:
             # If tile is active in current layout and cell is not free in board
             board.set_cell(tile_coords, self.color)
 
-    def rotate_shape(self, board):
+    def rotate_shape(self, board: CBoard = None):
         """
         Rotate shape by 90 degrees left. We need to verify that we are not colliding in @board.
         @param board Game board.
@@ -136,12 +136,15 @@ class CShape:
 
         return True
 
-    def check_collisions(self, board: CBoard):
+    def check_collisions(self, board: CBoard = None):
         """
         Check shape collisions.
         :param board: Board to be used.
         :return: True - Shape is colliding with board
         """
+        if board is None:
+            return True
+
         for tile in self.__get_tiles():
             # Get tile global coords.
             tile_coords = Coord(self.location.x + tile.x, self.location.y + tile.y)

@@ -45,7 +45,7 @@ class CBoard:
             # raise Exception("Sorry, invalid coords argument: " + str(coords))
 
         # print(str(coords))
-        return self.__matrix[coords.x][coords.y] is -1
+        return self.__matrix[coords.x][coords.y] == -1
 
     def set_cell(self, coords: Coord, color: int):
         if self.cell_is_free(coords):
@@ -63,7 +63,7 @@ class CBoard:
             # Check if row is full
             for i in range(self.size.x):
                 # if there is one -1 item, the row is not full
-                if self.__matrix[i][y] is -1:
+                if self.__matrix[i][y] == -1:
                     row_is_full = False
                     break
 
@@ -98,5 +98,5 @@ class CBoard:
     def draw(self, surface: pygame.Surface, tile_textures: Dict, tile_size: int):
         for i in range(self.size.x):
             for j in range(self.size.y):
-                if self.__matrix[i][j] is not -1:
+                if self.__matrix[i][j] != -1:
                     surface.blit(tile_textures[self.__matrix[i][j]], (i * tile_size, j * tile_size))
