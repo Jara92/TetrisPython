@@ -18,11 +18,16 @@ class EShapeState(Enum):
 
 # Rotatable shape in game.
 class CShape:
-    __shapes = [[[False, False, False], [False, True, False], [True, True, True]],
+    """
+    Shape layout defined by columsn.
+    """
+    __shapes = [[[False, False, True], [False, True, True], [False, False, True]],
                 [[True, True], [True, True]],
                 [[False, False, False, False], [False, False, False, False], [True, True, True, True],
-                 [False, False, False, False]]]
-
+                 [False, False, False, False]],
+                [[True, True, True], [False, False, True], [False, False, False]],
+                [[False, False, False], [False, False, True], [True, True, True]]
+                ]
     __shape_state = None
     layout = None
     location = Coord(5, 0)
@@ -109,7 +114,7 @@ class CShape:
 
         return self.__move(board, movement_direction)
 
-    def __move(self, board: CBoard, direction: Tuple[int, int]):
+    def __move(self, board: CBoard, direction: Coord):
         """
         Move the shape. We need to verify that we are not colliding in @board.
         :param board: Board Game board.
