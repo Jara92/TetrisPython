@@ -1,8 +1,4 @@
-# import pyglet
-# from pyglet import window, shapes
 import os
-
-from pyglet.window import key
 import random
 from random import randint
 import pygame
@@ -13,18 +9,6 @@ from EApplicationState import ApplicationState
 from CShape import CShape
 from CBoard import CBoard
 from CInput import CInput
-from EControls import EControls
-from pyglet import image
-
-"""
-Change window origin to top-left corner.
-@source https://stackoverflow.com/questions/10167329/change-the-position-of-the-origin-in-pygame-coordinate-system
-"""
-
-
-def to_pygame(coords, height):
-    # return coords[0], height - coords[1]
-    return coords
 
 
 class CGame:
@@ -200,7 +184,7 @@ class CGame:
     @staticmethod
     def __random_color():
         """
-        Return random color in __colors.
+        Return random color index in __colors.
         @:returns Random color.
         """
 
