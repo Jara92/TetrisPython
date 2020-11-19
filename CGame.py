@@ -66,6 +66,7 @@ class CGame:
         # Create new board.
         self.board = CBoard()
         self.game_board_spawn_location = Coord(self.board.size.x // 2, 0)
+        self.next_shape_spawn_location = Coord((0.3 + self.board.size.x), 2)
 
         # Load tile image from resources.
         self.tile_texture = pygame.image.load('assets/img/tile.png')
@@ -84,6 +85,7 @@ class CGame:
 
         # Define first 2 shapes.
         self.active_shape = CShape(self.__random_color(), self.game_board_spawn_location)
+        self.next_shape = CShape(self.__random_color(), self.next_shape_spawn_location)
 
     def run(self):
         self.prepare_game()
@@ -142,8 +144,12 @@ class CGame:
         # Store current shape into board.
         self.active_shape.store(self.board)
 
-        # load new shape
-        self.active_shape = CShape(self.__random_color(), self.game_board_spawn_location)
+        # Make next shape active
+        self.active_shape = self.next_shape
+        # Set correct spawn location
+        self.active_shape.location = self.game_board_spawn_location
+        # generate new next shape
+        self.next_shape = CShape(self.__random_color(), self.next_shape_spawn_location)
 
         if self.active_shape.check_collisions(self.board) is False:
             game_over = True
@@ -156,6 +162,7 @@ class CGame:
         self.draw_debug()
 
         self.active_shape.draw(self.surface, self.__tile_textures[self.active_shape.color], self.tile_size)
+        self.next_shape.draw(self.surface, self.__tile_textures[self.next_shape.color], self.tile_size)
         self.board.draw(self.surface, self.__tile_textures, self.tile_size)
 
         #Render text
