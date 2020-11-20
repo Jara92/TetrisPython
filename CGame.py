@@ -9,6 +9,7 @@ from EApplicationState import ApplicationState
 from CShape import CShape
 from CBoard import CBoard
 from CInput import CInput
+from CScoreManager import CScoreManager
 
 
 class CGame:
@@ -116,10 +117,16 @@ class CGame:
             self.update(delta_time)
             self.draw()
 
-
-
         pygame.display.quit()
         pygame.quit()
+
+        # Save top score TODO test this stuff
+        old_top_score = CScoreManager.get_score()
+        if self.score > old_top_score:
+            if CScoreManager.save_score(self.score):
+                print("Written new top score: " + str(CScoreManager.get_score()))
+            else:
+                print("New score " + str(self.score) + " cannot be written! Top score is: " + CScoreManager.get_score())
 
         return ApplicationState.APPLICATION_STATE_MENU
 
