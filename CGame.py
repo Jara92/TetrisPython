@@ -29,6 +29,8 @@ class CGame:
     SPEED_UP_QUOCIENT = 1 / 10.0
     actual_update_interval = 0.5
     timer = 0
+    pause = False
+    pause_text = None
 
     tile_size = 50
 
@@ -57,6 +59,10 @@ class CGame:
         pygame.display.flip()
 
         pygame.display.set_caption("Tetris")
+
+        # Prerender pause text
+        font = pygame.font.Font(self.__font, 64)
+        self.pause_text = font.render("PAUSED", True, (255, 255, 255))
 
         random.seed(os.urandom(9999999))
 
@@ -88,9 +94,9 @@ class CGame:
         self.next_shape = CShape(self.__random_color(), self.next_shape_spawn_location)
 
     def run(self):
-        self.prepare_game()
-
         pygame.init()
+
+        self.prepare_game()
 
         running = True
         while running:
@@ -114,8 +120,16 @@ class CGame:
 
     # Update game state.
     def update(self, delta_time):
-        self.timer += delta_time
         self.input.update(delta_time)
+
+        # Pause
+        if self.input.is_pausing():
+            self.pause = not self.pause
+
+        if self.pause:
+            return
+
+        self.timer += delta_time
 
         if self.timer > self.actual_update_interval:
             self.timer = 0
@@ -165,13 +179,18 @@ class CGame:
         self.next_shape.draw(self.surface, self.__tile_textures[self.next_shape.color], self.tile_size)
         self.board.draw(self.surface, self.__tile_textures, self.tile_size)
 
-        #Render text
+        # Render text
         font = pygame.font.Font(self.__font, 32)
         text = font.render("Score: " + str(self.score), True, (255, 255, 255))
         self.surface.blit(text, (10, 5 + self.board.size.y * self.tile_size))
 
         text = font.render("Next: ", True, (255, 255, 255))
         self.surface.blit(text, (10 + self.board.size.x * self.tile_size, 5))
+
+        if self.pause:
+            self.surface.blit(self.pause_text,
+                              (((self.board.size.x / 2.0) * self.tile_size) - (self.pause_text.get_width() / 2.0)
+                               , ((self.board.size.y / 2.0) * self.tile_size) - (self.pause_text.get_height() / 2.0)))
 
         pygame.display.update()
 

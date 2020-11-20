@@ -46,9 +46,9 @@ class CInput:
         self.__controls = controls
 
     def on_key_down(self, symbol):
-        if symbol == self.__controls[EControls.action_rotate] and not self.get_action(EControls.action_rotate):
-            self.__state[EControls.action_rotate] = EInputState.state_pressed
 
+        if symbol == self.__controls[EControls.action_rotate] and not self.__get_action(EControls.action_rotate):
+            self.__state[EControls.action_rotate] = EInputState.state_pressed
         else:
             for action in EControls:
                 if symbol == self.__controls[action]:
@@ -60,13 +60,13 @@ class CInput:
                 self.__state[action] = EInputState.state_released
 
     def is_rotating(self):
-        out = self.get_action(EControls.action_rotate)
+        out = self.__get_action(EControls.action_rotate)
 
         self.__state[EControls.action_rotate] = EInputState.state_idling
         return out
 
     def is_speeding_up(self):
-        return self.get_action(EControls.action_speed_up)
+        return self.__get_action(EControls.action_speed_up)
 
     def __is_moving(self, action):
         # Get Action state
@@ -94,7 +94,14 @@ class CInput:
     def is_moving_right(self):
         return self.__is_moving(EControls.action_right)
 
-    def get_action(self, action: EControls):
+    def is_pausing(self):
+        if self.__state.get(EControls.action_pause, EInputState.state_released) == EInputState.state_pressed:
+            self.__state[EControls.action_pause] = EInputState.state_idling
+            return True
+
+        return False
+
+    def __get_action(self, action: EControls):
         """
         Get action status.
         :param action:
