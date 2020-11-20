@@ -12,6 +12,7 @@ from CInput import CInput
 
 
 class CGame:
+    __font = 'assets/fonts/zorque.ttf'
     """
     Colors description.
     white|orange|red|green|blue|gold
@@ -22,22 +23,21 @@ class CGame:
     """
     Update interval is getting smaller value during playing. The game is getting harder then.
     """
-
-    __font = 'assets/fonts/zorque.ttf'
     update_interval = 0.45
     MINIMAL_UPDATE_INTERVAL = 0.2
     SPEED_UP_QUOCIENT = 1 / 10.0
     actual_update_interval = 0.5
     timer = 0
+
     pause = False
     pause_text = None
 
     tile_size = 50
+    tile_texture = None
 
     board = None
     active_shape = None
     next_shape = None
-    tile_sprite = None
 
     game_board_spawn_location = None
     next_shape_spawn_location = None
@@ -45,7 +45,6 @@ class CGame:
     surface = None
     window_size = Coord(500, 650)
     input = None
-    tile_texture = None
 
     score = 0
 
@@ -94,6 +93,10 @@ class CGame:
         self.next_shape = CShape(self.__random_color(), self.next_shape_spawn_location)
 
     def run(self):
+        """
+        Run game stuff.
+        :return:
+        """
         pygame.init()
 
         self.prepare_game()
@@ -113,6 +116,8 @@ class CGame:
             self.update(delta_time)
             self.draw()
 
+
+
         pygame.display.quit()
         pygame.quit()
 
@@ -120,6 +125,12 @@ class CGame:
 
     # Update game state.
     def update(self, delta_time):
+        """
+        Update game state using delta_time and system events.
+        :param delta_time: Delta time
+        :return:
+        """
+
         self.input.update(delta_time)
 
         # Pause
@@ -155,6 +166,12 @@ class CGame:
         self.score += self.board.update(delta_time)
 
     def load_next_shape(self):
+        """
+        Save active shape and mark next_shape as active.
+        Generated new random next_shape.
+        :return:
+        """
+
         # Store current shape into board.
         self.active_shape.store(self.board)
 
@@ -172,21 +189,27 @@ class CGame:
         # Check collisison
 
     def draw(self):
+        """
+        Draw game in Pygame window.
+        """
         self.surface.fill((0, 0, 0))
         self.draw_debug()
 
+        # Draw shapes and board.
         self.active_shape.draw(self.surface, self.__tile_textures[self.active_shape.color], self.tile_size)
         self.next_shape.draw(self.surface, self.__tile_textures[self.next_shape.color], self.tile_size)
         self.board.draw(self.surface, self.__tile_textures, self.tile_size)
 
-        # Render text
+        # Render score text
         font = pygame.font.Font(self.__font, 32)
         text = font.render("Score: " + str(self.score), True, (255, 255, 255))
         self.surface.blit(text, (10, 5 + self.board.size.y * self.tile_size))
 
+        # Render next text
         text = font.render("Next: ", True, (255, 255, 255))
         self.surface.blit(text, (10 + self.board.size.x * self.tile_size, 5))
 
+        # Render pause-game layer
         if self.pause:
             self.surface.blit(self.pause_text,
                               (((self.board.size.x / 2.0) * self.tile_size) - (self.pause_text.get_width() / 2.0)
