@@ -32,6 +32,7 @@ class CGame:
 
     pause = False
     pause_text = None
+    game_over = False
 
     tile_size = 50
     tile_texture = None
@@ -103,7 +104,7 @@ class CGame:
         self.prepare_game()
 
         running = True
-        while running:
+        while running and not self.game_over:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     running = False
@@ -190,8 +191,8 @@ class CGame:
         self.next_shape = CShape(self.__random_color(), self.next_shape_spawn_location)
 
         if self.active_shape.check_collisions(self.board) is False:
-            game_over = True
             # Game ends now.
+            self.game_over = True
 
         # Check collisison
 
