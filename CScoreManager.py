@@ -1,5 +1,4 @@
 import os
-import sys
 import pickle
 
 
@@ -12,6 +11,11 @@ class CScoreManager:
 
     @staticmethod
     def __init_manager():
+        """
+        Init score manager adn prepare data structure in IO system.
+        :return: True - success; False - failed to init.
+        """
+
         # Create data directory if it does not exist
         if not os.path.isdir(CScoreManager.__data_directory):
             success = CScoreManager.__create_data_directory()
@@ -57,7 +61,6 @@ class CScoreManager:
         data_file_path = CScoreManager.__data_directory + "/" + CScoreManager.__data_file
 
         # Create the file if it does not exist.
-        # je to třeba nahradit.
         try:
             file = open(data_file_path, "wb")
             pickle.dump(score, file)
@@ -69,6 +72,10 @@ class CScoreManager:
 
     @staticmethod
     def get_score():
+        """
+        Get top score from data file.
+        :return: Top score
+        """
 
         # Return 0 when manager cannot be initialized.
         if not CScoreManager.__init_manager():

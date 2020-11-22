@@ -48,7 +48,7 @@ class CGame:
     window_size = Coord(500, 650)
     input = None
 
-    score = 1580
+    score = 0
 
     # Prepare new game.
     def prepare_game(self, window_width=600, window_height=650, tile_size=30):
@@ -102,7 +102,7 @@ class CGame:
 
         # FIXME debug
         old_top_score = CScoreManager.get_score()
-        print("Current top score: " + str(old_top_score));
+        print("Current top score: " + str(old_top_score))
 
         pygame.init()
 
