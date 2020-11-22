@@ -48,7 +48,7 @@ class CGame:
     window_size = Coord(500, 650)
     input = None
 
-    score = 0
+    score = 1580
 
     # Prepare new game.
     def prepare_game(self, window_width=600, window_height=650, tile_size=30):
@@ -99,6 +99,11 @@ class CGame:
         Run game stuff.
         :return:
         """
+
+        # FIXME debug
+        old_top_score = CScoreManager.get_score()
+        print("Current top score: " + str(old_top_score));
+
         pygame.init()
 
         self.prepare_game()
@@ -127,7 +132,8 @@ class CGame:
             if CScoreManager.save_score(self.score):
                 print("Written new top score: " + str(CScoreManager.get_score()))
             else:
-                print("New score " + str(self.score) + " cannot be written! Top score is: " + CScoreManager.get_score())
+                print("New score " + str(self.score) + " cannot be written! Top score is: " + str(
+                    CScoreManager.get_score()))
 
         return ApplicationState.APPLICATION_STATE_MENU
 

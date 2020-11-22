@@ -13,18 +13,20 @@ class CScoreManager:
     @staticmethod
     def __init_manager():
         # Create data directory if it does not exist
-        success = CScoreManager.__create_data_directory()
+        if not os.path.isdir(CScoreManager.__data_directory):
+            success = CScoreManager.__create_data_directory()
 
-        if not success:
-            return False
+            if not success:
+                return False
 
         # Create data file if it does not exist
-        success = CScoreManager.__create_data_file()
+        if not os.path.isfile(CScoreManager.__data_directory + "/" + CScoreManager.__data_file):
+            success = CScoreManager.__create_data_file()
 
-        if not success:
-            return False
-        else:
-            return True
+            if not success:
+                return False
+
+        return True
 
     @staticmethod
     def __create_data_directory():
@@ -33,15 +35,12 @@ class CScoreManager:
         :return: True - succes.
         """
 
-        if not os.path.isdir(CScoreManager.__data_directory):
-            try:
-                os.mkdir(CScoreManager.__data_directory)
-                return True
-            except OSError as error:
-                print(error)
-                return False
-
-        return True
+        try:
+            os.mkdir(CScoreManager.__data_directory)
+            return True
+        except OSError as error:
+            print(error)
+            return False
 
     @staticmethod
     def save_score(score: int):
@@ -51,28 +50,26 @@ class CScoreManager:
         :return: True - success.
         """
 
-        # If folder cannot be created there is no option to save my data.
-        if not CScoreManager.__create_data_directory():
+        # We need to verify that data structure is ready.
+        if not CScoreManager.__init_manager():
             return False
 
         data_file_path = CScoreManager.__data_directory + "/" + CScoreManager.__data_file
 
         # Create the file if it does not exist.
-        if not os.path.isfile(data_file_path):
-
-            try:
-                file = open(data_file_path, "wb")
-                pickle.dump(score, file)
-                file.close()
-                return True
-            except OSError as error:
-                print(error)
-                return False
-        else:
+        # je to třeba nahradit.
+        try:
+            file = open(data_file_path, "wb")
+            pickle.dump(score, file)
+            file.close()
+            return True
+        except OSError as error:
+            print(error)
             return False
 
     @staticmethod
     def get_score():
+
         # Return 0 when manager cannot be initialized.
         if not CScoreManager.__init_manager():
             return 0
@@ -91,6 +88,7 @@ class CScoreManager:
 
     @staticmethod
     def __create_data_file():
+
         """
         Create CScoreManager.__data_file if this file does not exist and fill it with integer 0 value.
         :return: True - succes.
