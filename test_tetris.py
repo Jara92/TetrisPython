@@ -66,3 +66,23 @@ def test_shape_movement2():
         shape.move_down(board)
 
     assert (shape.location == ref_location)
+
+
+def test_shape_movement3():
+    # TODO ovrit
+    shape = CShape(0, Coord(0, 0))
+    shape.layout = [[True, True], [True, True]]
+    board = CBoard(Coord(20, 30))
+
+    board.set_cell(Coord(19, 29), 0)
+    board.set_cell(Coord(10, 29), 0)
+    board.set_cell(Coord(11, 29), 0)
+    board.set_cell(Coord(12, 29), 0)
+
+    ref_location = Coord(19, 27)
+
+    # Trying to move out of board.
+    for i in range(30):
+        shape.move_down(board)
+
+    assert (shape.location == ref_location)

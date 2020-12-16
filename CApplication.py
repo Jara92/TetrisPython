@@ -13,8 +13,8 @@ class CApplication:
         self.game_instance = CGame()
 
     def run(self):
-        # app_state = ApplicationState.APPLICATION_STATE_MENU
-        app_state = ApplicationState.APPLICATION_STATE_GAME
+        app_state = ApplicationState.APPLICATION_STATE_MENU
+        #app_state = ApplicationState.APPLICATION_STATE_GAME
 
         while app_state != ApplicationState.APPLICATION_STATE_EXIT:
             if app_state == ApplicationState.APPLICATION_STATE_MENU:

@@ -1,0 +1,19 @@
+{
+  "button": {
+      "colours": {
+        "normal_bg": "#00000000",
+        "hovered_bg": "#00000000",
+        "active_bg": "#00000000",
+        "normal_border": "#00000000",
+        "selected_border": "#00000000",
+        "active_border": "#00000000",
+        "disabled_border": "#00000000",
+        "hovered_border": "#00000000",
+        "normal_text": "#ffffff",
+        "hovered_text": "#ffffff",
+        "disabled_text": "#ffffff",
+        "selected_text": "#ffffff",
+        "active_text": "#ffffff"
+      }
+  }
+}

@@ -64,6 +64,8 @@ class CShape:
         old_rotation = copy.deepcopy(self.layout)
         self.layout = numpy.rot90(numpy.array(self.layout, bool), 1, (0, 1))
 
+        padding = {Coord(1, 0), Coord(2, 0), Coord(-1, 0), Coord(-2, 0)}
+
         # Check new location collisions.
         if self.check_collisions(board) is False:
             # Reset location and return False, because the movement was not successful.
