@@ -3,8 +3,6 @@ import pygame_menu
 from EApplicationState import ApplicationState
 from NamedTupples import *
 from CScoreManager import CScoreManager
-import pygame_gui
-import thorpy
 
 
 class CMenu:
