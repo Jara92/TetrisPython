@@ -1,6 +1,8 @@
 import pygame
+import pygame_menu
 from EApplicationState import ApplicationState
 from NamedTupples import *
+from CScoreManager import CScoreManager
 import pygame_gui
 import thorpy
 
@@ -8,10 +10,11 @@ import thorpy
 class CMenu:
     window_size = None
     surface = None
-    ui_manager = None
-    button = None
+    menu = None
 
-    def prepare_menu(self, window_width=450, window_height=500):
+    return_state = ApplicationState.APPLICATION_STATE_EXIT
+
+    def prepare_menu(self, window_width=400, window_height=400):
         self.window_size = Coord(window_width, window_height)
 
         # Create window and flip it
@@ -20,15 +23,46 @@ class CMenu:
 
         pygame.display.set_caption("Tetris")
 
-        self.ui_manager = pygame_gui.UIManager((window_width, window_height), "assets/ui/menu.json")
+        # Create custom theme
+        custom_theme = pygame_menu.themes.THEME_ORANGE.copy()
+        custom_theme.menubar_close_button = False
 
-        return
-        # Define play button
-        button_size = Coord(250, 125)
-        button_location = Coord(window_width / 2 - (button_size.x / 2), 75)
-        self.button = pygame_gui.elements.UIButton(relative_rect=pygame.Rect(button_location, button_size),
-                                                   text='Play',
-                                                   manager=self.ui_manager)
+        custom_theme.title_font = pygame_menu.font.FONT_FRANCHISE
+        custom_theme.widget_font = pygame_menu.font.FONT_FRANCHISE
+        custom_theme.title_font_size = 64
+        custom_theme.widget_font_size = 56
+
+        # Define menu
+        self.menu = pygame_menu.Menu(window_width, window_height, 'Tetris',
+                                     theme=custom_theme)
+
+        # Define Play button
+        start_game_button = self.menu.add_button('Play', self.start_game)
+        start_game_button.set_selected(True)
+        start_game_button.set_shadow(enabled=False)
+
+        # Define quit button
+        quit_game_button = self.menu.add_button('Quit', self.exit_game)
+        quit_game_button.set_selected(False)
+        quit_game_button.set_shadow(enabled=False)
+
+        # Define top score label
+        top_score = CScoreManager.get_score()
+        score_label = self.menu.add_label("Top score: " + str(top_score))
+        score_label.set_font(pygame_menu.font.FONT_FRANCHISE, 36, (255, 255, 255), (255, 255, 255), (0, 0, 0, 0))
+
+        # Define author label
+        #label = self.menu.add_label("Jaroslav Fikar 2020")
+        #label.set_font(pygame_menu.font.FONT_FRANCHISE, 18, (255, 255, 255), (255, 255, 255), (0, 0, 0, 0))
+        #label.set_alignment(pygame_menu.locals.ALIGN_RIGHT)
+
+    def start_game(self):
+        self.return_state = ApplicationState.APPLICATION_STATE_GAME
+        self.menu.disable()
+
+    def exit_game(self):
+        self.return_state = ApplicationState.APPLICATION_STATE_EXIT
+        self.menu.disable()
 
     def run(self):
         """
@@ -40,31 +74,9 @@ class CMenu:
 
         self.prepare_menu()
 
-        running = True
-        while running:
-            for event in pygame.event.get():
-                if event.type == pygame.QUIT:
-                    running = False
-
-                if event.type == pygame.USEREVENT:
-                    if event.user_type == pygame_gui.UI_BUTTON_PRESSED:
-                        if event.ui_element == self.button:
-                            print('Play')
-
-                self.ui_manager.process_events(event)
-
-            # Calculate delta time and convert to to seconds.
-            delta_time = pygame.time.Clock().tick(60) / 1000
-
-            self.ui_manager.update(delta_time)
-            self.surface.blit(self.surface, (0, 0))
-            self.ui_manager.draw_ui(self.surface)
-
-            pygame.display.update()
-            # self.update(delta_time)
-            # self.draw()
+        self.menu.mainloop(self.surface)
 
         pygame.display.quit()
         pygame.quit()
 
-        return ApplicationState.APPLICATION_STATE_EXIT
+        return self.return_state
