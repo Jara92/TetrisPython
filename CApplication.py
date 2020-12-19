@@ -5,6 +5,10 @@ from EApplicationState import ApplicationState
 
 class CApplication:
     def run(self):
+        """
+        Run application.
+        :return:
+        """
         app_state = ApplicationState.APPLICATION_STATE_MENU
         #app_state = ApplicationState.APPLICATION_STATE_GAME
 

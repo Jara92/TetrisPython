@@ -5,6 +5,8 @@ from NamedTupples import Coord
 
 class CBoard:
     size = Coord(0, 0)
+    base_score = 50
+    bonus_score = 250
     __matrix = []
 
     def __init__(self, board_size: Coord = Coord(15, 20)):
@@ -80,20 +82,31 @@ class CBoard:
         return score
 
     def shift_board(self, y: int):
+        single_color = True
+        last_color = None
         # Check every row
         for y in range(y, 0, -1):
             # if there is another row over this row
             if y - 1 >= 0:
                 # Move upper row down
                 for x in range(self.size.x):
+                    if last_color is not None and not last_color == self.__matrix[x][y]:
+                        single_color = False
+
+                    last_color = self.__matrix[x][y]
+
                     self.__matrix[x][y] = self.__matrix[x][y - 1]
             else:
                 # Clear the last row
                 for x in range(self.size.x):
                     self.__matrix[x][y] = -1
 
-        # TODO: Score should be based on row colors.
-        return 50
+        # Return score based on row color
+        # If the row has only one color then player gets bonus
+        if single_color:
+            return self.bonus_score
+        else:
+            return self.base_score
 
     def draw(self, surface: pygame.Surface, tile_textures: Dict, tile_size: int):
         for i in range(self.size.x):
