@@ -4,6 +4,9 @@ from NamedTupples import Coord
 
 
 class CBoard:
+    """
+    Game board.
+    """
     size = Coord(0, 0)
     base_score = 50
     bonus_score = 250
@@ -50,10 +53,21 @@ class CBoard:
         return self.__matrix[coords.x][coords.y] == -1
 
     def set_cell(self, coords: Coord, color: int):
+        """
+        Set given color in the cell.
+        :param coords: Cell coords
+        :param color: Color to be set.
+        :return:
+        """
         if self.cell_is_free(coords):
             self.__matrix[coords.x][coords.y] = color
 
     def update(self, delta_time: float):
+        """
+        Update game board.
+        :param delta_time: Delta time.
+        :return: Score to be achieved.
+        """
         # Check rows while the row before was full
         score = 0
         y = self.size.y - 1
@@ -82,6 +96,11 @@ class CBoard:
         return score
 
     def shift_board(self, y: int):
+        """
+        Shift board and get score.
+        :param y: Row num.
+        :return: Score to be achieved.
+        """
         single_color = True
         last_color = None
         # Check every row
@@ -109,6 +128,13 @@ class CBoard:
             return self.base_score
 
     def draw(self, surface: pygame.Surface, tile_textures: Dict, tile_size: int):
+        """
+        Draw the board using given pygame surface.
+        :param surface: Pygame surface.
+        :param tile_textures: Tile textures dict to be rendered.
+        :param tile_size: One tile size
+        :return:
+        """
         for i in range(self.size.x):
             for j in range(self.size.y):
                 if self.__matrix[i][j] != -1:

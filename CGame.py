@@ -52,6 +52,13 @@ class CGame:
 
     # Prepare new game.
     def prepare_game(self, window_width=600, window_height=650, tile_size=30):
+        """
+        Prepare game window.
+        :param window_width: Window width in pixels.
+        :param window_height: Window height in pixels.
+        :param tile_size: Tile size.
+        :return:
+        """
         self.window_size = Coord(window_width, window_height)
         self.tile_size = tile_size
 

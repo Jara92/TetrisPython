@@ -6,6 +6,9 @@ from CScoreManager import CScoreManager
 
 
 class CMenu:
+    """
+    Menu window.
+    """
     window_size = None
     surface = None
     menu = None
@@ -13,6 +16,12 @@ class CMenu:
     return_state = ApplicationState.APPLICATION_STATE_EXIT
 
     def prepare_menu(self, window_width=400, window_height=400):
+        """
+        Prepare menu window.
+        :param window_width: Window width in pixels.
+        :param window_height: Window height in pixels.
+        :return:
+        """
         self.window_size = Coord(window_width, window_height)
 
         # Create window and flip it
@@ -55,23 +64,33 @@ class CMenu:
         #label.set_alignment(pygame_menu.locals.ALIGN_RIGHT)
 
     def start_game(self):
+        """
+        Start game action.
+        :return:
+        """
         self.return_state = ApplicationState.APPLICATION_STATE_GAME
         self.menu.disable()
 
     def exit_game(self):
+        """
+        Exit game action.
+        :return:
+        """
         self.return_state = ApplicationState.APPLICATION_STATE_EXIT
         self.menu.disable()
 
     def run(self):
         """
         Run game stuff.
-        :return:
+        :return: New application state.
         """
 
         pygame.init()
 
+        # Prepare menu
         self.prepare_menu()
 
+        # Menu loop
         self.menu.mainloop(self.surface)
 
         pygame.display.quit()

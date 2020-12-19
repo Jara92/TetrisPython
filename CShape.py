@@ -19,7 +19,7 @@ class EShapeState(Enum):
 # Rotatable shape in game.
 class CShape:
     """
-    Shape layout defined by columsn.
+    Shape layout defined by columns.
     """
     __shapes = [[[False, False, True], [False, True, True], [False, False, True]],
                 [[True, True], [True, True]],
