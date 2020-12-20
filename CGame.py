@@ -33,6 +33,8 @@ class CGame:
     pause = False
     pause_text = None
     game_over = False
+    game_over_title = None
+    game_over_desc = None
 
     tile_size = 50
     tile_texture = None
@@ -50,7 +52,6 @@ class CGame:
 
     score = 0
 
-    # Prepare new game.
     def prepare_game(self, window_width=600, window_height=650, tile_size=30):
         """
         Prepare game window.
@@ -70,7 +71,10 @@ class CGame:
 
         # Prerender pause text
         font = pygame.font.Font(self.__font, 64)
+        small_font = pygame.font.Font(self.__font, 32)
         self.pause_text = font.render("PAUSED", True, (255, 255, 255))
+        self.game_over_title = font.render("GAME OVER", True, (255, 255, 255))
+        self.game_over_desc = small_font.render("Press ESC to reset.", True, (255, 255, 255))
 
         random.seed(os.urandom(9999999))
 
@@ -101,6 +105,38 @@ class CGame:
         self.active_shape = CShape(self.__random_color(), self.game_board_spawn_location)
         self.next_shape = CShape(self.__random_color(), self.next_shape_spawn_location)
 
+    def reset_game(self):
+        """
+        Reset game and prepare for new game.
+        """
+        self.save_top_score()
+
+        # Load new random shapes.
+        self.load_next_shape()
+        self.load_next_shape()
+
+        self.board = CBoard()
+        self.input = CInput()
+        self.score = 0
+        self.pause = False
+        self.game_over = False
+
+
+
+    def save_top_score(self):
+        """
+        Save top score using interface.
+        """
+
+        # Save top score TODO remove debug stuff
+        old_top_score = CScoreManager.get_score()
+        if self.score > old_top_score:
+            if CScoreManager.save_score(self.score):
+                print("Written new top score: " + str(CScoreManager.get_score()))
+            else:
+                print("New score " + str(self.score) + " cannot be written! Top score is: " + str(
+                    CScoreManager.get_score()))
+
     def run(self):
         """
         Run game stuff.
@@ -116,7 +152,7 @@ class CGame:
         self.prepare_game()
 
         running = True
-        while running and not self.game_over:
+        while running:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     running = False
@@ -133,18 +169,10 @@ class CGame:
         pygame.display.quit()
         pygame.quit()
 
-        # Save top score TODO test this stuff
-        old_top_score = CScoreManager.get_score()
-        if self.score > old_top_score:
-            if CScoreManager.save_score(self.score):
-                print("Written new top score: " + str(CScoreManager.get_score()))
-            else:
-                print("New score " + str(self.score) + " cannot be written! Top score is: " + str(
-                    CScoreManager.get_score()))
+        self.save_top_score()
 
         return ApplicationState.APPLICATION_STATE_MENU
 
-    # Update game state.
     def update(self, delta_time):
         """
         Update game state using delta_time and system events.
@@ -152,18 +180,27 @@ class CGame:
         :return:
         """
 
+        # Update input
         self.input.update(delta_time)
+
+        # Reset game
+        if self.game_over and self.input.is_pausing() :
+            self.reset_game()
+            return
 
         # Pause
         if self.input.is_pausing():
             self.pause = not self.pause
 
-        if self.pause:
+        if self.pause or self.game_over:
             return
 
+        # Inc timer
         self.timer += delta_time
 
+        # Movement using timer.
         if self.timer > self.actual_update_interval:
+            # Reset timer and make the movement.
             self.timer = 0
             movement = self.active_shape.move_down(self.board)
 
@@ -171,6 +208,7 @@ class CGame:
             if movement is False:
                 self.load_next_shape()
 
+        # Movement and rotation input handle.
         if self.input.is_moving_left():
             movement = self.active_shape.move_left(self.board)
         elif self.input.is_moving_right():
@@ -184,6 +222,7 @@ class CGame:
         else:
             self.actual_update_interval = self.update_interval
 
+        # Increse score.
         self.score += self.board.update(delta_time)
 
     def load_next_shape(self):
@@ -232,11 +271,21 @@ class CGame:
 
         # Render pause-game layer
         if self.pause:
-            self.surface.blit(self.pause_text,
-                              (((self.board.size.x / 2.0) * self.tile_size) - (self.pause_text.get_width() / 2.0)
-                               , ((self.board.size.y / 2.0) * self.tile_size) - (self.pause_text.get_height() / 2.0)))
+            self.render_text_in_center(self.surface, self.pause_text)
+
+        # Render game-over layer
+        elif self.game_over:
+            self.render_text_in_center(self.surface, self.game_over_title)
+            self.surface.blit(self.game_over_desc,
+                              (((self.board.size.x / 2.0) * self.tile_size) - (self.game_over_desc.get_width() / 2.0),
+                               ((self.board.size.y / 2.0) * self.tile_size) - (
+                                       self.game_over_desc.get_height() / 2.0) + 80))
 
         pygame.display.update()
+
+    def render_text_in_center(self, surface: pygame.Surface, text):
+        surface.blit(text, (((self.board.size.x / 2.0) * self.tile_size) - (text.get_width() / 2.0)
+                            , ((self.board.size.y / 2.0) * self.tile_size) - (text.get_height() / 2.0)))
 
     def draw_debug(self):
         """
