@@ -68,6 +68,9 @@ class CShape:
 
         # Check new location collisions.
         if self.check_collisions(board) is False:
+            # Is there collision with board boundary?
+            #diff = Coord(0 - self.location, board.size.x  )
+
             # Reset location and return False, because the movement was not successful.
             self.layout = old_rotation
             return False
@@ -79,8 +82,7 @@ class CShape:
         Print shape layout.
         """
 
-        N = len(self.layout[0])
-        for i in range(N):
+        for i in range(len(self.layout[0])):
             print(self.layout[i])
 
     def move_down(self, board: CBoard):

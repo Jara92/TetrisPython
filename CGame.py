@@ -121,8 +121,6 @@ class CGame:
         self.pause = False
         self.game_over = False
 
-
-
     def save_top_score(self):
         """
         Save top score using interface.
