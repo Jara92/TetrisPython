@@ -141,6 +141,8 @@ class CGame:
         :return:
         """
 
+        # TODO add leveling and speeding up
+
         # FIXME debug
         old_top_score = CScoreManager.get_score()
         print("Current top score: " + str(old_top_score))

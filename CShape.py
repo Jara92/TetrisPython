@@ -26,7 +26,9 @@ class CShape:
                 [[False, False, False, False], [False, False, False, False], [True, True, True, True],
                  [False, False, False, False]],
                 [[True, True, True], [False, False, True], [False, False, False]],
-                [[False, False, False], [False, False, True], [True, True, True]]
+                [[False, False, False], [False, False, True], [True, True, True]],
+                [[False, False, True], [False, True, True], [False, True, False]],
+                [[False, True, False], [False, True, True], [False, False, True]]
                 ]
     __shape_state = None
     layout = None
@@ -62,20 +64,24 @@ class CShape:
 
         # Rotate 90° right
         old_rotation = copy.deepcopy(self.layout)
+        old_location = self.location
         self.layout = numpy.rot90(numpy.array(self.layout, bool), 1, (0, 1))
 
-        padding = {Coord(1, 0), Coord(2, 0), Coord(-1, 0), Coord(-2, 0)}
+        # All possible paddings
+        padding = [Coord(0, 0), Coord(1, 0), Coord(-1, 0), Coord(2, 0), Coord(-2, 0)]
 
-        # Check new location collisions.
-        if self.check_collisions(board) is False:
-            # Is there collision with board boundary?
-            #diff = Coord(0 - self.location, board.size.x  )
+        # Try every padding until there is some valid.
+        for padd in padding:
+            # Check new location collisions.
+            self.location = Coord(old_location.x + padd.x, old_location.y + padd.y)
+            if self.check_collisions(board) is True:
+                return True
 
-            # Reset location and return False, because the movement was not successful.
-            self.layout = old_rotation
-            return False
+        # There si collision for every padding so we will restore the shape.
+        self.location = old_location
+        self.layout = old_rotation
 
-        return True
+        return False
 
     def print_shape(self):
         """
