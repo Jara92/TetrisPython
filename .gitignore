@@ -1,3 +1,8 @@
 /venv/
 /venv/*
 /.idea/
+/dist
+/data
+/build
+/__pycache__
+/main.spec
