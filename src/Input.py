@@ -51,7 +51,7 @@ class Input:
                 if self.__movement_counter >= self.__movement_idle:
                     self.__movement_counter = 0
 
-    def change_controls(self, controls:dict):
+    def change_controls(self, controls: dict):
         """
         Change game controls.
         :param controls: New game controls dict.
@@ -65,11 +65,15 @@ class Input:
         :param symbol: Pressed symbol.
         """
 
+        print(str(self.__state.get(Controls.action_rotate, EInputState.state_released)))
+
         # Rotation action
-        if symbol == self.__controls[Controls.action_rotate] and not self.__get_action(Controls.action_rotate):
+        if symbol == self.__controls[Controls.action_rotate] and self.__state.get(Controls.action_rotate,
+                                                                                  EInputState.state_released) != EInputState.state_idling:
+            print("pressed")
             self.__state[Controls.action_rotate] = EInputState.state_pressed
         # Other actions
-        else:
+        elif symbol != self.__controls[Controls.action_rotate]:
             for action in Controls:
                 if symbol == self.__controls[action]:
                     self.__state[action] = EInputState.state_pressed
@@ -89,8 +93,11 @@ class Input:
         :return: True - Is rotating; False - Is not rotating
         """
         out = self.__get_action(Controls.action_rotate)
+        # print(str(out))
 
-        self.__state[Controls.action_rotate] = EInputState.state_idling
+        if out:
+            self.__state[Controls.action_rotate] = EInputState.state_idling
+
         return out
 
     def is_speeding_up(self):
