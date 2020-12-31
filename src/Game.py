@@ -18,46 +18,50 @@ class Game:
     white|orange|red|green|blue|gold
     """
     __colors = [(255, 255, 255), (255, 128, 0), (178, 34, 34), (50, 205, 50), (0, 191, 255), (255, 215, 0)]
-
     __tile_textures = {}
-    """
-    Update interval is getting smaller value during playing. The game is getting harder then.
-    """
-    update_interval = 0.45
-    speed_up = 1 / 10.0
-    actual_update_interval = update_interval
-    timer = 0
 
-    MIN_UPDATE_INTERVAL = 0.2
-    UPDATE_INTERVAL_STEP = 0.03
-    LEVEL_UP_QUOCIENT = 1.7
+    update_interval = 0.45  # Update interval is getting smaller value during playing. The game is getting harder then.
+    speed_up = 1 / 10.0  # Speeding up quocient.
+    actual_update_interval = update_interval  # Actual update interval which may be boosted by speed_up
+    timer = 0  # Update timer.
+
+    # Game leveling and speed constants
+    MIN_UPDATE_INTERVAL = 0.10
+    UPDATE_INTERVAL_STEP = 0.035  # cca 10 levels (10 speed levels)
+    LEVEL_UP_QUOCIENT = 1.35  # cca 8042 is top highest level score
     SPEED_UP_QUOCIENT = 1.1
 
+    # Pause and game over variables
     pause = False
     pause_text = None
     game_over = False
     game_over_title = None
     game_over_desc = None
 
+    # Tile setup
     tile_size = 50
     tile_texture = None
 
+    # Board and important shapes
     board = None
     active_shape = None
     next_shape = None
 
+    # Important lcoations
     game_board_spawn_location = None
     next_shape_spawn_location = None
 
+    # Window and input
     surface = None
     window_size = Coord(500, 650)
     input = None
 
+    # Sound effects
     sound_effect_score = None
     sound_effect_game_over = None
 
-    score = 0
-    level_up_score = 400
+    score = 0  # Actual score
+    level_up_score = 400  # Score needed to achieve to level up
 
     def prepare_game(self, window_width=600, window_height=650, tile_size=30):
         """
@@ -83,6 +87,7 @@ class Game:
         self.game_over_title = font.render("GAME OVER", True, (255, 255, 255))
         self.game_over_desc = small_font.render("Press ESC to reset.", True, (255, 255, 255))
 
+        # Init random seed
         random.seed(os.urandom(9999999))
 
         # Create input manager using default controls.
@@ -196,7 +201,7 @@ class Game:
         self.input.update(delta_time)
 
         # Reset game
-        if self.game_over and self.input.is_pausing() :
+        if self.game_over and self.input.is_pausing():
             self.reset_game()
             return
 
