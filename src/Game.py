@@ -220,8 +220,6 @@ class Game:
             if movement is False:
                 self.load_next_shape()
 
-        print("Update interval: " + str(self.actual_update_interval))
-
         # Movement and rotation input handle.
         if self.input.is_moving_left():
             movement = self.active_shape.move_left(self.board)

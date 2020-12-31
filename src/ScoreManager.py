@@ -10,14 +10,16 @@ class ScoreManager:
     __data_file = "score.data"
 
     def __init__(self):
-        ScoreManager.__init_manager()
+        ScoreManager.init_manager()
 
     @staticmethod
-    def __init_manager():
+    def init_manager(data_directory=None):
         """
         Init score manager adn prepare data structure in IO system.
         :return: True - success; False - failed to init.
         """
+        if data_directory is not None:
+            ScoreManager.__data_directory = data_directory
 
         # Create data directory if it does not exist
         if not os.path.isdir(ScoreManager.__data_directory):
@@ -81,7 +83,7 @@ class ScoreManager:
         """
 
         # Return 0 when manager cannot be initialized.
-        if not ScoreManager.__init_manager():
+        if not ScoreManager.init_manager():
             return 0
 
         data_file_path = ScoreManager.__data_directory + "/" + ScoreManager.__data_file

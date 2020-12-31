@@ -1,9 +1,16 @@
 import copy
 import numpy
+import sys, os
+from shutil import rmtree
+
+# This stuff finds src module
+path = os.path.dirname(os.path.abspath(__file__))
+sys.path.insert(0, path + '/../')
 
 from src.Shape import Shape
 from src.Board import Board
 from src.NamedTupples import Coord
+from src.ScoreManager import ScoreManager
 
 
 def test_shape_rotation1():
@@ -23,6 +30,10 @@ def test_shape_rotation1():
 
 
 def test_shape_rotation2():
+    """
+    Shape rotation algoritm test.
+    :return:
+    """
     shape = Shape()
     shape.layout = [[False, False, True], [False, True, True], [False, False, True]]
 
@@ -36,6 +47,10 @@ def test_shape_rotation2():
 
 
 def test_shape_movement1():
+    """
+    Shape basic movement.
+    :return:
+    """
     shape = Shape(0, Coord(0, 0))
     board = Board(Coord(20, 30))
 
@@ -54,6 +69,10 @@ def test_shape_movement1():
 
 
 def test_shape_movement2():
+    """
+    Shape moves correctly when there are no filled cells.
+    :return:
+    """
     shape = Shape(0, Coord(0, 0))
     shape.layout = [[True, True], [True, True]]
     board = Board(Coord(20, 30))
@@ -69,20 +88,87 @@ def test_shape_movement2():
 
 
 def test_shape_movement3():
-    # TODO ovrit
+    """
+    Shape cannot move to filled cells.
+    :return:
+    """
     shape = Shape(0, Coord(0, 0))
     shape.layout = [[True, True], [True, True]]
     board = Board(Coord(20, 30))
 
-    board.set_cell(Coord(19, 29), 0)
-    board.set_cell(Coord(10, 29), 0)
-    board.set_cell(Coord(11, 29), 0)
-    board.set_cell(Coord(12, 29), 0)
+    # Set filled cells.
+    board.set_cell(Coord(0, 29), 0)
+    board.set_cell(Coord(1, 29), 0)
+    board.set_cell(Coord(2, 29), 0)
+    board.set_cell(Coord(3, 29), 0)
 
-    ref_location = Coord(19, 27)
+    ref_location = Coord(0, 27)
 
     # Trying to move out of board.
     for i in range(30):
         shape.move_down(board)
 
     assert (shape.location == ref_location)
+
+
+def test_shape_bad_spawn():
+    """
+    Spawn location is filled so new shape cannot move or rotate.
+    :return:
+    """
+    shape = Shape(0, Coord(5, 0))
+    shape.layout = [[False, False, False, False], [False, False, False, False], [True, True, True, True],
+                    [False, False, False, False]]
+    board = Board(Coord(20, 30))
+
+    # Set filled cells.
+    for i in range(3):
+        board.set_cell(Coord(2, i), 0)
+        board.set_cell(Coord(3, i), 0)
+        board.set_cell(Coord(4, i), 0)
+        board.set_cell(Coord(5, i), 0)
+        board.set_cell(Coord(6, i), 0)
+        board.set_cell(Coord(7, i), 0)
+
+    ref_location = Coord(5, 0)
+
+    # Trying to move out of board.
+    for i in range(30):
+        shape.move_down(board)
+        shape.rotate_shape(board)
+
+    assert (shape.location == ref_location)
+    assert (shape.layout == [[False, False, False, False], [False, False, False, False], [True, True, True, True],
+                             [False, False, False, False]])
+
+
+def test_score_manager_load():
+    """
+    Load data form file.
+    :return:
+    """
+    test_data_directory = "test_data"
+    assert (ScoreManager.init_manager(test_data_directory))
+    value = ScoreManager.get_score()
+
+    assert (value >= 0)
+
+    # Clear testing mess
+    rmtree(test_data_directory)
+
+
+def test_score_manager_save():
+    """
+    Save new data to file.
+    :return:
+    """
+    test_data_directory = "test_data"
+    assert (ScoreManager.init_manager(test_data_directory))
+
+    new_value = 954
+    ScoreManager.save_score(new_value)
+
+    assert(ScoreManager.get_score() == new_value)
+
+    # Clear testing mess
+    rmtree(test_data_directory)
