@@ -25,8 +25,8 @@ class Game:
     """
     update_interval = 0.45
     MINIMAL_UPDATE_INTERVAL = 0.2
-    SPEED_UP_QUOCIENT = 1 / 10.0
-    actual_update_interval = 0.5
+    speed_up_quocient = 1 / 10.0
+    actual_update_interval = update_interval
     timer = 0
 
     pause = False
@@ -53,6 +53,7 @@ class Game:
     sound_effect_game_over = None
 
     score = 0
+    level_up_score = 400
 
     def prepare_game(self, window_width=600, window_height=650, tile_size=30):
         """
@@ -124,6 +125,7 @@ class Game:
         self.board = Board()
         self.input = Input()
         self.score = 0
+        self.level_up_score = 400
         self.pause = False
         self.game_over = False
 
@@ -214,6 +216,8 @@ class Game:
             if movement is False:
                 self.load_next_shape()
 
+        print("Update interval: " + str(self.actual_update_interval))
+
         # Movement and rotation input handle.
         if self.input.is_moving_left():
             movement = self.active_shape.move_left(self.board)
@@ -224,7 +228,7 @@ class Game:
 
         # Speeding up
         if self.input.is_speeding_up():
-            self.actual_update_interval = self.update_interval * self.SPEED_UP_QUOCIENT
+            self.actual_update_interval = self.update_interval * self.speed_up_quocient
         else:
             self.actual_update_interval = self.update_interval
 
@@ -234,6 +238,12 @@ class Game:
 
         if achieved_score > 0:
             self.sound_effect_score.play()
+
+            # Leveling up
+            if self.score >= self.level_up_score:
+                self.level_up_score *= 1.2
+                self.speed_up_quocient = 1.1*self.speed_up_quocient
+                self.update_interval = max(self.update_interval - 0.03, self.MINIMAL_UPDATE_INTERVAL)
 
     def load_next_shape(self):
         """
