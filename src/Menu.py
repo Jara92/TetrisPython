@@ -1,11 +1,11 @@
 import pygame
 import pygame_menu
-from src.EApplicationState import ApplicationState
+from src.ApplicationState import ApplicationState
 from src.NamedTupples import *
-from src.CScoreManager import CScoreManager
+from src.ScoreManager import ScoreManager
 
 
-class CMenu:
+class Menu:
     """
     Menu window.
     """
@@ -54,7 +54,7 @@ class CMenu:
         quit_game_button.set_shadow(enabled=False)
 
         # Define top score label
-        top_score = CScoreManager.get_score()
+        top_score = ScoreManager.get_score()
         score_label = self.menu.add_label("Top score: " + str(top_score))
         score_label.set_font(pygame_menu.font.FONT_FRANCHISE, 36, (255, 255, 255), (255, 255, 255), (0, 0, 0, 0))
 

@@ -3,7 +3,7 @@ from typing import Dict
 from src.NamedTupples import Coord
 
 
-class CBoard:
+class Board:
     """
     Game board.
     """

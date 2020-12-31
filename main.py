@@ -1,4 +1,4 @@
-from src.CApplication import CApplication
+from src.Application import Application
 
 
 def main():
@@ -6,7 +6,7 @@ def main():
     import sys
     sys.setrecursionlimit(10000)
 
-    app = CApplication()
+    app = Application()
     app.run()
 
     return 0

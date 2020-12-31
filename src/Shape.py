@@ -3,7 +3,7 @@ import copy
 import numpy
 import pygame
 from random import randint
-from src.CBoard import CBoard
+from src.Board import Board
 
 from src.NamedTupples import Coord
 
@@ -16,7 +16,7 @@ class EShapeState(Enum):
 
 
 # Rotatable shape in game.
-class CShape:
+class Shape:
     """
     Shape layout defined by columns.
     """
@@ -40,9 +40,9 @@ class CShape:
 
         # We need some random layout for this shape.
         # Deep copy needed because we will rotate the shape.
-        self.layout = copy.deepcopy(CShape.__random_shape())
+        self.layout = copy.deepcopy(Shape.__random_shape())
 
-    def store(self, board: CBoard):
+    def store(self, board: Board):
         """
         Store this shape in given board.
         :param board: Board to be used
@@ -55,7 +55,7 @@ class CShape:
             # If tile is active in current layout and cell is not free in board
             board.set_cell(tile_coords, self.color)
 
-    def rotate_shape(self, board: CBoard = None):
+    def rotate_shape(self, board: Board = None):
         """
         Rotate shape by 90 degrees left. We need to verify that we are not colliding in @board.
         @param board Game board.
@@ -90,7 +90,7 @@ class CShape:
         for i in range(len(self.layout[0])):
             print(self.layout[i])
 
-    def move_down(self, board: CBoard):
+    def move_down(self, board: Board):
         """
         Move shape down.
         @param board Game board.
@@ -101,7 +101,7 @@ class CShape:
 
         return self.__move(board, movement_direction)
 
-    def move_left(self, board: CBoard):
+    def move_left(self, board: Board):
         """
         Move shape left.
         @param board Game board.
@@ -112,7 +112,7 @@ class CShape:
 
         return self.__move(board, movement_direction)
 
-    def move_right(self, board: CBoard):
+    def move_right(self, board: Board):
         """
         Move shape right.
         @param board Game board.
@@ -123,7 +123,7 @@ class CShape:
 
         return self.__move(board, movement_direction)
 
-    def __move(self, board: CBoard, direction: Coord):
+    def __move(self, board: Board, direction: Coord):
         """
         Move the shape. We need to verify that we are not colliding in @board.
         :param board: Board Game board.
@@ -145,7 +145,7 @@ class CShape:
 
         return True
 
-    def check_collisions(self, board: CBoard = None):
+    def check_collisions(self, board: Board = None):
         """
         Check shape collisions.
         :param board: Board to be used.
@@ -203,6 +203,6 @@ class CShape:
         """
 
         # Generate random index in shapes list - We want new random shape.
-        random_index = randint(0, len(CShape.__shapes) - 1)
+        random_index = randint(0, len(Shape.__shapes) - 1)
 
-        return CShape.__shapes[random_index]
+        return Shape.__shapes[random_index]

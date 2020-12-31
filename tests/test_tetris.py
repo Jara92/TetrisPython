@@ -1,13 +1,13 @@
 import copy
 import numpy
 
-from src.CShape import CShape
-from src.CBoard import CBoard
+from src.Shape import Shape
+from src.Board import Board
 from src.NamedTupples import Coord
 
 
 def test_shape_rotation1():
-    shape = CShape()
+    shape = Shape()
     shape_layout = copy.deepcopy(shape.layout)
 
     # Rotate n*4 time - the shape should be the same
@@ -23,7 +23,7 @@ def test_shape_rotation1():
 
 
 def test_shape_rotation2():
-    shape = CShape()
+    shape = Shape()
     shape.layout = [[False, False, True], [False, True, True], [False, False, True]]
 
     ref_rotation = [[True, True, True], [False, True, False], [False, False, False]]
@@ -36,8 +36,8 @@ def test_shape_rotation2():
 
 
 def test_shape_movement1():
-    shape = CShape(0, Coord(0, 0))
-    board = CBoard(Coord(20, 30))
+    shape = Shape(0, Coord(0, 0))
+    board = Board(Coord(20, 30))
 
     ref_location = (2, 3)
 
@@ -54,9 +54,9 @@ def test_shape_movement1():
 
 
 def test_shape_movement2():
-    shape = CShape(0, Coord(0, 0))
+    shape = Shape(0, Coord(0, 0))
     shape.layout = [[True, True], [True, True]]
-    board = CBoard(Coord(20, 30))
+    board = Board(Coord(20, 30))
 
     # 29 is last valid y position but shape has "height" tiles 2
     ref_location = (Coord(0, 28))
@@ -70,9 +70,9 @@ def test_shape_movement2():
 
 def test_shape_movement3():
     # TODO ovrit
-    shape = CShape(0, Coord(0, 0))
+    shape = Shape(0, Coord(0, 0))
     shape.layout = [[True, True], [True, True]]
-    board = CBoard(Coord(20, 30))
+    board = Board(Coord(20, 30))
 
     board.set_cell(Coord(19, 29), 0)
     board.set_cell(Coord(10, 29), 0)

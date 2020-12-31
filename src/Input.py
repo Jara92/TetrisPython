@@ -1,6 +1,6 @@
 from enum import Enum
 import pygame.key
-from src.EControls import EControls
+from src.Controls import Controls
 
 
 class EInputState(Enum):
@@ -9,7 +9,7 @@ class EInputState(Enum):
     state_idling = 2
 
 
-class CInput:
+class Input:
     """
     Class which handles user input.
     """
@@ -17,11 +17,11 @@ class CInput:
     __controls = None
     # Default controls dict to be used.
     __default_controls = {
-        EControls.action_left: pygame.K_LEFT,
-        EControls.action_right: pygame.K_RIGHT,
-        EControls.action_speed_up: pygame.K_DOWN,
-        EControls.action_rotate: pygame.K_UP,
-        EControls.action_pause: pygame.K_ESCAPE
+        Controls.action_left: pygame.K_LEFT,
+        Controls.action_right: pygame.K_RIGHT,
+        Controls.action_speed_up: pygame.K_DOWN,
+        Controls.action_rotate: pygame.K_UP,
+        Controls.action_pause: pygame.K_ESCAPE
     }
     __state = {}
     __movement_idle = 0.045
@@ -30,7 +30,7 @@ class CInput:
     def __init__(self, controls: dict = None):
         # Set default layout.
         if controls is None:
-            controls = CInput.__default_controls
+            controls = Input.__default_controls
 
         self.__controls = controls
 
@@ -40,7 +40,7 @@ class CInput:
         :param delta_time: Delta time
         """
         # if movement is on
-        movements = [EControls.action_left, EControls.action_right]
+        movements = [Controls.action_left, Controls.action_right]
 
         # Movement timer
         for movement in movements:
@@ -66,11 +66,11 @@ class CInput:
         """
 
         # Rotation action
-        if symbol == self.__controls[EControls.action_rotate] and not self.__get_action(EControls.action_rotate):
-            self.__state[EControls.action_rotate] = EInputState.state_pressed
+        if symbol == self.__controls[Controls.action_rotate] and not self.__get_action(Controls.action_rotate):
+            self.__state[Controls.action_rotate] = EInputState.state_pressed
         # Other actions
         else:
-            for action in EControls:
+            for action in Controls:
                 if symbol == self.__controls[action]:
                     self.__state[action] = EInputState.state_pressed
 
@@ -79,7 +79,7 @@ class CInput:
         Key up event.
         :param symbol: Released symbol.
         """
-        for action in EControls:
+        for action in Controls:
             if symbol == self.__controls[action]:
                 self.__state[action] = EInputState.state_released
 
@@ -88,9 +88,9 @@ class CInput:
         Is rotation rotation input on?
         :return: True - Is rotating; False - Is not rotating
         """
-        out = self.__get_action(EControls.action_rotate)
+        out = self.__get_action(Controls.action_rotate)
 
-        self.__state[EControls.action_rotate] = EInputState.state_idling
+        self.__state[Controls.action_rotate] = EInputState.state_idling
         return out
 
     def is_speeding_up(self):
@@ -98,7 +98,7 @@ class CInput:
         Is speeding up input on?
         :return: True - Is speeding up; False - Is not speeding up
         """
-        return self.__get_action(EControls.action_speed_up)
+        return self.__get_action(Controls.action_speed_up)
 
     def __is_moving(self, action):
         # Get Action state
@@ -114,7 +114,7 @@ class CInput:
             self.__state[action] = EInputState.state_idling
 
             # Next movement will be little bit delayed
-            self.__movement_counter = CInput.INPUT_HOLD_DELAY
+            self.__movement_counter = Input.INPUT_HOLD_DELAY
 
             return True
 
@@ -125,27 +125,27 @@ class CInput:
         Is moving left input on?
         :return: True - Is moving left; False - Is not moving left
         """
-        return self.__is_moving(EControls.action_left)
+        return self.__is_moving(Controls.action_left)
 
     def is_moving_right(self):
         """
         Is moving right input on?
         :return: True - Is moving right; False - Is not moving right
         """
-        return self.__is_moving(EControls.action_right)
+        return self.__is_moving(Controls.action_right)
 
     def is_pausing(self):
         """
         Is pausing action on?
         :return: True - Is pausing action on; False - Is not pausing action on
         """
-        if self.__state.get(EControls.action_pause, EInputState.state_released) == EInputState.state_pressed:
-            self.__state[EControls.action_pause] = EInputState.state_idling
+        if self.__state.get(Controls.action_pause, EInputState.state_released) == EInputState.state_pressed:
+            self.__state[Controls.action_pause] = EInputState.state_idling
             return True
 
         return False
 
-    def __get_action(self, action: EControls):
+    def __get_action(self, action: Controls):
         """
         Get action status.
         :param action:

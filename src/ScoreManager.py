@@ -2,7 +2,7 @@ import os
 import pickle
 
 
-class CScoreManager:
+class ScoreManager:
     """
     Top score manager. Saves and reads saved top score form data file.
     """
@@ -10,7 +10,7 @@ class CScoreManager:
     __data_file = "score.data"
 
     def __init__(self):
-        CScoreManager.__init_manager()
+        ScoreManager.__init_manager()
 
     @staticmethod
     def __init_manager():
@@ -20,15 +20,15 @@ class CScoreManager:
         """
 
         # Create data directory if it does not exist
-        if not os.path.isdir(CScoreManager.__data_directory):
-            success = CScoreManager.__create_data_directory()
+        if not os.path.isdir(ScoreManager.__data_directory):
+            success = ScoreManager.__create_data_directory()
 
             if not success:
                 return False
 
         # Create data file if it does not exist
-        if not os.path.isfile(CScoreManager.__data_directory + "/" + CScoreManager.__data_file):
-            success = CScoreManager.__create_data_file()
+        if not os.path.isfile(ScoreManager.__data_directory + "/" + ScoreManager.__data_file):
+            success = ScoreManager.__create_data_file()
 
             if not success:
                 return False
@@ -43,7 +43,7 @@ class CScoreManager:
         """
 
         try:
-            os.mkdir(CScoreManager.__data_directory)
+            os.mkdir(ScoreManager.__data_directory)
             return True
         except OSError as error:
             print(error)
@@ -58,10 +58,10 @@ class CScoreManager:
         """
 
         # We need to verify that data structure is ready.
-        if not CScoreManager.__init_manager():
+        if not ScoreManager.__init_manager():
             return False
 
-        data_file_path = CScoreManager.__data_directory + "/" + CScoreManager.__data_file
+        data_file_path = ScoreManager.__data_directory + "/" + ScoreManager.__data_file
 
         # Create the file if it does not exist.
         try:
@@ -81,10 +81,10 @@ class CScoreManager:
         """
 
         # Return 0 when manager cannot be initialized.
-        if not CScoreManager.__init_manager():
+        if not ScoreManager.__init_manager():
             return 0
 
-        data_file_path = CScoreManager.__data_directory + "/" + CScoreManager.__data_file
+        data_file_path = ScoreManager.__data_directory + "/" + ScoreManager.__data_file
         value = 0
 
         try:
@@ -104,4 +104,4 @@ class CScoreManager:
         :return: True - succes.
         """
 
-        return CScoreManager.save_score(0)
+        return ScoreManager.save_score(0)

@@ -1,7 +1,7 @@
 from enum import Enum
 
 
-class EControls(Enum):
+class Controls(Enum):
     """
     Controls layout to be used.
     """

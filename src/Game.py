@@ -4,14 +4,14 @@ from random import randint
 import pygame
 from src.NamedTupples import Coord
 
-from src.EApplicationState import ApplicationState
-from src.CShape import CShape
-from src.CBoard import CBoard
-from src.CInput import CInput
-from src.CScoreManager import CScoreManager
+from src.ApplicationState import ApplicationState
+from src.Shape import Shape
+from src.Board import Board
+from src.Input import Input
+from src.ScoreManager import ScoreManager
 
 
-class CGame:
+class Game:
     __font = 'assets/fonts/zorque.ttf'
     """
     Colors description.
@@ -81,10 +81,10 @@ class CGame:
         random.seed(os.urandom(9999999))
 
         # Create input manager using default controls.
-        self.input = CInput()
+        self.input = Input()
 
         # Create new board.
-        self.board = CBoard()
+        self.board = Board()
         self.game_board_spawn_location = Coord(self.board.size.x // 2, 0)
         self.next_shape_spawn_location = Coord((0.3 + self.board.size.x), 2)
 
@@ -108,8 +108,8 @@ class CGame:
             i = i + 1
 
         # Define first 2 shapes.
-        self.active_shape = CShape(self.__random_color(), self.game_board_spawn_location)
-        self.next_shape = CShape(self.__random_color(), self.next_shape_spawn_location)
+        self.active_shape = Shape(self.__random_color(), self.game_board_spawn_location)
+        self.next_shape = Shape(self.__random_color(), self.next_shape_spawn_location)
 
     def reset_game(self):
         """
@@ -121,8 +121,8 @@ class CGame:
         self.load_next_shape()
         self.load_next_shape()
 
-        self.board = CBoard()
-        self.input = CInput()
+        self.board = Board()
+        self.input = Input()
         self.score = 0
         self.pause = False
         self.game_over = False
@@ -133,13 +133,13 @@ class CGame:
         """
 
         # Save top score TODO remove debug stuff
-        old_top_score = CScoreManager.get_score()
+        old_top_score = ScoreManager.get_score()
         if self.score > old_top_score:
-            if CScoreManager.save_score(self.score):
-                print("Written new top score: " + str(CScoreManager.get_score()))
+            if ScoreManager.save_score(self.score):
+                print("Written new top score: " + str(ScoreManager.get_score()))
             else:
                 print("New score " + str(self.score) + " cannot be written! Top score is: " + str(
-                    CScoreManager.get_score()))
+                    ScoreManager.get_score()))
 
     def run(self):
         """
@@ -150,7 +150,7 @@ class CGame:
         # TODO add leveling and speeding up
 
         # FIXME debug
-        old_top_score = CScoreManager.get_score()
+        old_top_score = ScoreManager.get_score()
         print("Current top score: " + str(old_top_score))
 
         pygame.init()
@@ -250,7 +250,7 @@ class CGame:
         # Set correct spawn location
         self.active_shape.location = self.game_board_spawn_location
         # generate new next shape
-        self.next_shape = CShape(self.__random_color(), self.next_shape_spawn_location)
+        self.next_shape = Shape(self.__random_color(), self.next_shape_spawn_location)
 
         # If game ends right now.
         if self.active_shape.check_collisions(self.board) is False and self.game_over is False:
@@ -321,7 +321,7 @@ class CGame:
         """
 
         # Generate random index in color list - We want new random color.
-        random_index = randint(0, len(CGame.__colors) - 1)
+        random_index = randint(0, len(Game.__colors) - 1)
 
         return random_index
         # return CGame.__colors[random_index]

@@ -1,9 +1,9 @@
-from src.CGame import CGame
-from src.CMenu import CMenu
-from src.EApplicationState import ApplicationState
+from src.Game import Game
+from src.Menu import Menu
+from src.ApplicationState import ApplicationState
 
 
-class CApplication:
+class Application:
     def run(self):
         """
         Run application.
@@ -14,9 +14,9 @@ class CApplication:
 
         while app_state != ApplicationState.APPLICATION_STATE_EXIT:
             if app_state == ApplicationState.APPLICATION_STATE_MENU:
-                app_state = CMenu().run()
+                app_state = Menu().run()
             elif app_state == ApplicationState.APPLICATION_STATE_GAME:
-                app_state = CGame().run()
+                app_state = Game().run()
 
         return 0
 
