@@ -24,10 +24,14 @@ class Game:
     Update interval is getting smaller value during playing. The game is getting harder then.
     """
     update_interval = 0.45
-    MINIMAL_UPDATE_INTERVAL = 0.2
-    speed_up_quocient = 1 / 10.0
+    speed_up = 1 / 10.0
     actual_update_interval = update_interval
     timer = 0
+
+    MIN_UPDATE_INTERVAL = 0.2
+    UPDATE_INTERVAL_STEP = 0.03
+    LEVEL_UP_QUOCIENT = 1.7
+    SPEED_UP_QUOCIENT = 1.1
 
     pause = False
     pause_text = None
@@ -228,7 +232,7 @@ class Game:
 
         # Speeding up
         if self.input.is_speeding_up():
-            self.actual_update_interval = self.update_interval * self.speed_up_quocient
+            self.actual_update_interval = self.update_interval * self.speed_up
         else:
             self.actual_update_interval = self.update_interval
 
@@ -241,9 +245,12 @@ class Game:
 
             # Leveling up
             if self.score >= self.level_up_score:
-                self.level_up_score *= 1.2
-                self.speed_up_quocient = 1.1*self.speed_up_quocient
-                self.update_interval = max(self.update_interval - 0.03, self.MINIMAL_UPDATE_INTERVAL)
+                # Setup score for next level up
+                self.level_up_score *= self.LEVEL_UP_QUOCIENT
+                # Update speed up for current level
+                self.speed_up *= self.SPEED_UP_QUOCIENT
+                # Update interval. Update interval must be greater than self.MIN_UPDATE_INTERVAL
+                self.update_interval = max(self.update_interval - self.UPDATE_INTERVAL_STEP, self.MIN_UPDATE_INTERVAL)
 
     def load_next_shape(self):
         """
