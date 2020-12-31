@@ -1,6 +1,6 @@
-from CGame import CGame
-from CMenu import CMenu
-from EApplicationState import ApplicationState
+from src.CGame import CGame
+from src.CMenu import CMenu
+from src.EApplicationState import ApplicationState
 
 
 class CApplication:

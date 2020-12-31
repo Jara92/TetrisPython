@@ -3,10 +3,9 @@ import copy
 import numpy
 import pygame
 from random import randint
-from typing import Tuple
-from CBoard import CBoard
+from src.CBoard import CBoard
 
-from NamedTupples import Coord
+from src.NamedTupples import Coord
 
 
 class EShapeState(Enum):

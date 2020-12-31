@@ -1,6 +1,4 @@
-from CApplication import CApplication
-import pygame
-import pygame_menu
+from src.CApplication import CApplication
 
 
 def main():

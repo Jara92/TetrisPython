@@ -2,14 +2,13 @@ import os
 import random
 from random import randint
 import pygame
-from NamedTupples import Coord
-from pygame import display
+from src.NamedTupples import Coord
 
-from EApplicationState import ApplicationState
-from CShape import CShape
-from CBoard import CBoard
-from CInput import CInput
-from CScoreManager import CScoreManager
+from src.EApplicationState import ApplicationState
+from src.CShape import CShape
+from src.CBoard import CBoard
+from src.CInput import CInput
+from src.CScoreManager import CScoreManager
 
 
 class CGame:

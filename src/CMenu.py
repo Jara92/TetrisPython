@@ -1,8 +1,8 @@
 import pygame
 import pygame_menu
-from EApplicationState import ApplicationState
-from NamedTupples import *
-from CScoreManager import CScoreManager
+from src.EApplicationState import ApplicationState
+from src.NamedTupples import *
+from src.CScoreManager import CScoreManager
 
 
 class CMenu:

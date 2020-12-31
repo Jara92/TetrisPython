@@ -3,6 +3,9 @@ import pickle
 
 
 class CScoreManager:
+    """
+    Top score manager. Saves and reads saved top score form data file.
+    """
     __data_directory = "./data"
     __data_file = "score.data"
 

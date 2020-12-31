@@ -1,6 +1,6 @@
 import pygame
 from typing import Dict
-from NamedTupples import Coord
+from src.NamedTupples import Coord
 
 
 class CBoard:

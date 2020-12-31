@@ -1,6 +1,6 @@
 from enum import Enum
 import pygame.key
-from EControls import EControls
+from src.EControls import EControls
 
 
 class EInputState(Enum):

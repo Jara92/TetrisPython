@@ -1,9 +1,9 @@
 import copy
 import numpy
 
-from CShape import CShape
-from CBoard import CBoard
-from NamedTupples import Coord
+from src.CShape import CShape
+from src.CBoard import CBoard
+from src.NamedTupples import Coord
 
 
 def test_shape_rotation1():
