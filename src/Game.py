@@ -143,7 +143,6 @@ class Game:
         Save top score using interface.
         """
 
-        # Save top score TODO remove debug stuff
         old_top_score = ScoreManager.get_score()
         if self.score > old_top_score:
             if ScoreManager.save_score(self.score):
@@ -158,11 +157,8 @@ class Game:
         :return:
         """
 
-        # TODO add leveling and speeding up
-
-        # FIXME debug
-        old_top_score = ScoreManager.get_score()
-        print("Current top score: " + str(old_top_score))
+        # old_top_score = ScoreManager.get_score()
+        # print("Current top score: " + str(old_top_score))
 
         pygame.init()
 
@@ -279,14 +275,14 @@ class Game:
 
             self.sound_effect_game_over.play()
 
-        # Check collisison
-
     def draw(self):
         """
         Draw game in Pygame window.
         """
         self.surface.fill((0, 0, 0))
-        self.draw_debug()
+        self.draw_matrix()
+        pygame.draw.rect(self.surface, (255, 140, 0),
+                         (0, 0, self.board.size.x * self.tile_size, self.board.size.y * self.tile_size), 2)
 
         # Draw shapes and board.
         self.active_shape.draw(self.surface, self.__tile_textures[self.active_shape.color], self.tile_size)
@@ -320,18 +316,19 @@ class Game:
         surface.blit(text, (((self.board.size.x / 2.0) * self.tile_size) - (text.get_width() / 2.0)
                             , ((self.board.size.y / 2.0) * self.tile_size) - (text.get_height() / 2.0)))
 
-    def draw_debug(self):
+    def draw_matrix(self):
         """
-        Draw debug matrix and other debugging objects.
+        Draw matrix.
         """
+        color = (64, 64, 64)
 
         for i in range(self.board.size.x + 1):
-            pygame.draw.line(self.surface, (255, 0, 0), (i * self.tile_size, 0),
-                             (i * self.tile_size, self.board.size.y * self.tile_size))
+            pygame.draw.line(self.surface, color, (i * self.tile_size, 0),
+                             (i * self.tile_size, self.board.size.y * self.tile_size), 1)
 
         for i in range(self.board.size.y + 1):
-            pygame.draw.line(self.surface, (255, 0, 0), (0, i * self.tile_size),
-                             (self.board.size.x * self.tile_size, i * self.tile_size))
+            pygame.draw.line(self.surface, color, (0, i * self.tile_size),
+                             (self.board.size.x * self.tile_size, i * self.tile_size), 1)
 
     @staticmethod
     def __random_color():
