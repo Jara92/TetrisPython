@@ -65,12 +65,9 @@ class Input:
         :param symbol: Pressed symbol.
         """
 
-        print(str(self.__state.get(Controls.action_rotate, EInputState.state_released)))
-
         # Rotation action
         if symbol == self.__controls[Controls.action_rotate] and self.__state.get(Controls.action_rotate,
                                                                                   EInputState.state_released) != EInputState.state_idling:
-            print("pressed")
             self.__state[Controls.action_rotate] = EInputState.state_pressed
         # Other actions
         elif symbol != self.__controls[Controls.action_rotate]:
@@ -93,7 +90,6 @@ class Input:
         :return: True - Is rotating; False - Is not rotating
         """
         out = self.__get_action(Controls.action_rotate)
-        # print(str(out))
 
         if out:
             self.__state[Controls.action_rotate] = EInputState.state_idling
