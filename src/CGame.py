@@ -49,6 +49,9 @@ class CGame:
     window_size = Coord(500, 650)
     input = None
 
+    sound_effect_score = None
+    sound_effect_game_over = None
+
     score = 0
 
     def prepare_game(self, window_width=600, window_height=650, tile_size=30):
@@ -87,6 +90,10 @@ class CGame:
 
         # Load tile image from resources.
         self.tile_texture = pygame.image.load('assets/img/tile.png')
+
+        # Load sound effects
+        self.sound_effect_score = pygame.mixer.Sound("assets/sound/score_achiveved.wav")
+        self.sound_effect_game_over = pygame.mixer.Sound("assets/sound/game_over.wav")
 
         # Create sprite and scale it to self.cell_size size in pixels.
         self.tile_texture = pygame.transform.scale(self.tile_texture, (self.tile_size, self.tile_size))
@@ -222,7 +229,11 @@ class CGame:
             self.actual_update_interval = self.update_interval
 
         # Increse score.
-        self.score += self.board.update(delta_time)
+        achieved_score = self.board.update(delta_time)
+        self.score += achieved_score
+
+        if achieved_score > 0:
+            self.sound_effect_score.play()
 
     def load_next_shape(self):
         """
@@ -241,9 +252,12 @@ class CGame:
         # generate new next shape
         self.next_shape = CShape(self.__random_color(), self.next_shape_spawn_location)
 
-        if self.active_shape.check_collisions(self.board) is False:
+        # If game ends right now.
+        if self.active_shape.check_collisions(self.board) is False and self.game_over is False:
             # Game ends now.
             self.game_over = True
+
+            self.sound_effect_game_over.play()
 
         # Check collisison
 

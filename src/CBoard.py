@@ -86,10 +86,6 @@ class CBoard:
             # We will increse score and shift board if row is full
             if row_is_full:
                 score += self.shift_board(y)
-            # In other cases will leave while cycle
-            else:
-                a = 5
-                # running = False
 
             y = y - 1
 
