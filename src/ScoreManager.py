@@ -59,10 +59,6 @@ class ScoreManager:
         :return: True - success.
         """
 
-        # We need to verify that data structure is ready.
-       # if not ScoreManager.__init_manager():
-        #    return False
-
         data_file_path = ScoreManager.__data_directory + "/" + ScoreManager.__data_file
 
         # Create the file if it does not exist.

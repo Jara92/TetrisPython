@@ -3,7 +3,7 @@ import pygame.key
 from src.Controls import Controls
 
 
-class EInputState(Enum):
+class InputState(Enum):
     state_pressed = 0
     state_released = 1
     state_idling = 2
@@ -44,7 +44,7 @@ class Input:
 
         # Movement timer
         for movement in movements:
-            if self.__state.get(movement, EInputState.state_released) == EInputState.state_idling:
+            if self.__state.get(movement, InputState.state_released) == InputState.state_idling:
                 self.__movement_counter += delta_time
 
                 # Reset movement timer
@@ -67,13 +67,13 @@ class Input:
 
         # Rotation action
         if symbol == self.__controls[Controls.action_rotate] and self.__state.get(Controls.action_rotate,
-                                                                                  EInputState.state_released) != EInputState.state_idling:
-            self.__state[Controls.action_rotate] = EInputState.state_pressed
+                                                                                  InputState.state_released) != InputState.state_idling:
+            self.__state[Controls.action_rotate] = InputState.state_pressed
         # Other actions
         elif symbol != self.__controls[Controls.action_rotate]:
             for action in Controls:
                 if symbol == self.__controls[action]:
-                    self.__state[action] = EInputState.state_pressed
+                    self.__state[action] = InputState.state_pressed
 
     def on_key_up(self, symbol):
         """
@@ -82,7 +82,7 @@ class Input:
         """
         for action in Controls:
             if symbol == self.__controls[action]:
-                self.__state[action] = EInputState.state_released
+                self.__state[action] = InputState.state_released
 
     def is_rotating(self):
         """
@@ -91,8 +91,9 @@ class Input:
         """
         out = self.__get_action(Controls.action_rotate)
 
+        # We dont want to rotate the shape few times.
         if out:
-            self.__state[Controls.action_rotate] = EInputState.state_idling
+            self.__state[Controls.action_rotate] = InputState.state_idling
 
         return out
 
@@ -105,16 +106,16 @@ class Input:
 
     def __is_moving(self, action):
         # Get Action state
-        action_state = self.__state.get(action, EInputState.state_released)
+        action_state = self.__state.get(action, InputState.state_released)
 
         # If key is being hold and movement timer is 0
-        if action_state == EInputState.state_idling and self.__movement_counter is 0:
+        if action_state == InputState.state_idling and self.__movement_counter is 0:
             return True
 
         # key was pressed now
-        elif action_state == EInputState.state_pressed:
+        elif action_state == InputState.state_pressed:
             # Mark key as being hold
-            self.__state[action] = EInputState.state_idling
+            self.__state[action] = InputState.state_idling
 
             # Next movement will be little bit delayed
             self.__movement_counter = Input.INPUT_HOLD_DELAY
@@ -142,8 +143,8 @@ class Input:
         Is pausing action on?
         :return: True - Is pausing action on; False - Is not pausing action on
         """
-        if self.__state.get(Controls.action_pause, EInputState.state_released) == EInputState.state_pressed:
-            self.__state[Controls.action_pause] = EInputState.state_idling
+        if self.__state.get(Controls.action_pause, InputState.state_released) == InputState.state_pressed:
+            self.__state[Controls.action_pause] = InputState.state_idling
             return True
 
         return False
@@ -155,4 +156,4 @@ class Input:
         :return:
         """
 
-        return self.__state.get(action, EInputState.state_released) == EInputState.state_pressed
+        return self.__state.get(action, InputState.state_released) == InputState.state_pressed
