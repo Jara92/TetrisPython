@@ -17,13 +17,15 @@ def test_shape_rotation1():
     shape = Shape()
     shape_layout = copy.deepcopy(shape.layout)
 
+    board = Board(Coord(20, 30))
+
     # Rotate n*4 time - the shape should be the same
     n = 16
     for i in range(n):
-        shape.rotate_shape()
-        shape.rotate_shape()
-        shape.rotate_shape()
-        shape.rotate_shape()
+        shape.rotate_shape(board)
+        shape.rotate_shape(board)
+        shape.rotate_shape(board)
+        shape.rotate_shape(board)
 
     compare = numpy.array(shape_layout) == numpy.array(shape.layout)
     assert (compare.all())
@@ -39,8 +41,34 @@ def test_shape_rotation2():
 
     ref_rotation = [[True, True, True], [False, True, False], [False, False, False]]
 
+    board = Board(Coord(20, 30))
+
     # Rotate shape
-    shape.rotate_shape()
+    shape.rotate_shape(board)
+
+    compare = numpy.array(shape.layout) == numpy.array(ref_rotation)
+    assert (compare.all())
+
+
+def test_shape_rotation3():
+    """
+    Shape rotation collision test.
+    :return:
+    """
+    shape = Shape(0, Coord(5, 1))
+    shape.layout = [[False, False, True], [False, True, True], [False, False, True]]
+    shape.print_shape()
+
+    # Rotation should not be changed.
+    ref_rotation = shape.layout.copy()
+
+    board = Board(Coord(20, 30))
+
+    board.set_cell(Coord(6, 2), 1)
+
+    # Rotate shape
+    shape.rotate_shape(board)
+    shape.print_shape()
 
     compare = numpy.array(shape.layout) == numpy.array(ref_rotation)
     assert (compare.all())
@@ -168,7 +196,7 @@ def test_score_manager_save():
     new_value = 954
     ScoreManager.save_score(new_value)
 
-    assert(ScoreManager.get_score() == new_value)
+    assert (ScoreManager.get_score() == new_value)
 
     # Clear testing mess
     rmtree(test_data_directory)

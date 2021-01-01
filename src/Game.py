@@ -103,7 +103,9 @@ class Game:
 
         # Load sound effects
         self.sound_effect_score = pygame.mixer.Sound("assets/sound/score_achiveved.wav")
+        self.sound_effect_score.set_volume(min(self.sound_effect_score.get_volume() * 0.25, 1.0))
         self.sound_effect_game_over = pygame.mixer.Sound("assets/sound/game_over.wav")
+        self.sound_effect_game_over.set_volume(min(self.sound_effect_game_over.get_volume() * 0.5, 1.0))
 
         # Create sprite and scale it to self.cell_size size in pixels.
         self.tile_texture = pygame.transform.scale(self.tile_texture, (self.tile_size, self.tile_size))
@@ -269,7 +271,7 @@ class Game:
         self.next_shape = Shape(self.__random_color(), self.next_shape_spawn_location)
 
         # If game ends right now.
-        if self.active_shape.check_collisions(self.board) is False and self.game_over is False:
+        if self.active_shape.check_collisions(self.board) != 0 and self.game_over is False:
             # Game ends now.
             self.game_over = True
 

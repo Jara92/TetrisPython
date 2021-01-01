@@ -66,8 +66,21 @@ class Shape:
         for padd in padding:
             # Check new location collisions.
             self.location = Coord(old_location.x + padd.x, old_location.y + padd.y)
-            if self.check_collisions(board) is True:
+
+            # Get collision state
+            collision = self.check_collisions(board)
+
+            # No collision - rotation success
+            if collision == 0:
                 return True
+
+            # Shape is out of board - continue in cycle
+            if collision == 1:
+                continue
+
+            # Collision with filled cell - no way to rotate
+            if collision == 2:
+                break
 
         # There si collision for every padding so we will restore the shape.
         self.location = old_location
@@ -80,8 +93,10 @@ class Shape:
         Print shape layout.
         """
 
-        for i in range(len(self.layout[0])):
-            print(self.layout[i])
+        for i in range(len(self.layout)):
+            for j in range(len(self.layout)):
+                print(str(self.layout[j][i]), end=" ")
+            print("")
 
     def move_down(self, board: Board):
         """
@@ -131,32 +146,33 @@ class Shape:
         self.location = Coord(self.location.x + direction.x, self.location.y + direction.y)
 
         # Check new location collisions.
-        if self.check_collisions(board) is False:
+        if self.check_collisions(board) != 0:
             # Reset location and return False, because the movement was not successful.
             self.location = old_location
             return False
 
         return True
 
-    def check_collisions(self, board: Board = None):
+    def check_collisions(self, board: Board):
         """
         Check shape collisions.
         :param board: Board to be used.
-        :return: True - Shape is colliding with board
+        :return: 0 - No collisions; 1 - Shape is out of board; 2 - Shape is in collision.
         """
-        if board is None:
-            return True
 
         for tile in self.__get_tiles():
             # Get tile global coords.
             tile_coords = Coord(self.location.x + tile.x, self.location.y + tile.y)
 
+            if self.layout[tile.x][tile.y] and board.cell_is_out_of_board(tile_coords):
+                return 1
+
             # If tile is active in current layout and cell is not free in board
             if self.layout[tile.x][tile.y] and not board.cell_is_free(tile_coords):
-                return False
+                return 2
 
         # Every tile is in free cell so the movement is successful.
-        return True
+        return 0
 
     def __get_tiles(self):
         """
