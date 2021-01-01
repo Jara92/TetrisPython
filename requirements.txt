@@ -1,4 +1,4 @@
 numpy
 pygame
-pygame-menu
+pygame_menu
 cx_freeze

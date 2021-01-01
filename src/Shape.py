@@ -8,13 +8,6 @@ from src.Board import Board
 from src.NamedTupples import Coord
 
 
-class EShapeState(Enum):
-    state_idling = 0  # Waiting in queue to be spawned
-    state_spawning = 1  # Shape is spawning in the board - we are ignoring out of range movement error
-    state_moving = 2  # main state. Shape is moving down in the board.
-    state_collision = 3  # shape is colliding in the board
-
-
 # Rotatable shape in game.
 class Shape:
     """

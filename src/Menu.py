@@ -58,30 +58,9 @@ class Menu:
         score_label = self.menu.add_label("Top score: " + str(top_score))
         score_label.set_font(pygame_menu.font.FONT_FRANCHISE, 36, (255, 255, 255), (255, 255, 255), (0, 0, 0, 0))
 
-        # Define author label
-        #label = self.menu.add_label("Jaroslav Fikar 2020")
-        #label.set_font(pygame_menu.font.FONT_FRANCHISE, 18, (255, 255, 255), (255, 255, 255), (0, 0, 0, 0))
-        #label.set_alignment(pygame_menu.locals.ALIGN_RIGHT)
-
-    def start_game(self):
-        """
-        Start game action.
-        :return:
-        """
-        self.return_state = ApplicationState.APPLICATION_STATE_GAME
-        self.menu.disable()
-
-    def exit_game(self):
-        """
-        Exit game action.
-        :return:
-        """
-        self.return_state = ApplicationState.APPLICATION_STATE_EXIT
-        self.menu.disable()
-
     def run(self):
         """
-        Run game stuff.
+        Run game menu stuff.
         :return: New application state.
         """
 
@@ -97,3 +76,17 @@ class Menu:
         pygame.quit()
 
         return self.return_state
+
+    def start_game(self):
+        """
+        Start game action.
+        """
+        self.return_state = ApplicationState.APPLICATION_STATE_GAME
+        self.menu.disable()
+
+    def exit_game(self):
+        """
+        Exit game action.
+        """
+        self.return_state = ApplicationState.APPLICATION_STATE_EXIT
+        self.menu.disable()
