@@ -61,7 +61,8 @@ class Game:
     sound_effect_game_over = None
 
     score = 0  # Actual score
-    level_up_score = 400  # Score needed to achieve to level up
+    DEFAULT_LEVEL_UP_SCORE = 400 # New game level up score.
+    level_up_score = DEFAULT_LEVEL_UP_SCORE  # Score needed to achieve to level up
 
     def prepare_game(self, window_width=600, window_height=650, tile_size=30):
         """
@@ -136,7 +137,7 @@ class Game:
         self.board = Board()
         self.input = Input()
         self.score = 0
-        self.level_up_score = 400
+        self.level_up_score = self.DEFAULT_LEVEL_UP_SCORE
         self.pause = False
         self.game_over = False
 
