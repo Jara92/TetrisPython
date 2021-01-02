@@ -13,16 +13,15 @@ class Shape:
     """
     Shape layout defined by columns.
     """
-    __shapes = [[[False, False, True], [False, True, True], [False, False, True]],
-                [[True, True], [True, True]],
-                [[False, False, False, False], [False, False, False, False], [True, True, True, True],
+    SHAPES = [[[False, False, True], [False, True, True], [False, False, True]],
+              [[True, True], [True, True]],
+              [[False, False, False, False], [False, False, False, False], [True, True, True, True],
                  [False, False, False, False]],
-                [[True, True, True], [False, False, True], [False, False, False]],
-                [[False, False, False], [False, False, True], [True, True, True]],
-                [[False, False, True], [False, True, True], [False, True, False]],
-                [[False, True, False], [False, True, True], [False, False, True]]
-                ]
-    __shape_state = None
+              [[True, True, True], [False, False, True], [False, False, False]],
+              [[False, False, False], [False, False, True], [True, True, True]],
+              [[False, False, True], [False, True, True], [False, True, False]],
+              [[False, True, False], [False, True, True], [False, False, True]]
+              ]
     layout = None
     location = Coord(5, 0)
     color = None
@@ -212,6 +211,6 @@ class Shape:
         """
 
         # Generate random index in shapes list - We want new random shape.
-        random_index = randint(0, len(Shape.__shapes) - 1)
+        random_index = randint(0, len(Shape.SHAPES) - 1)
 
-        return Shape.__shapes[random_index]
+        return Shape.SHAPES[random_index]

@@ -2,11 +2,6 @@ import copy
 import numpy
 import sys, os
 from shutil import rmtree
-
-# This stuff finds src module
-path = os.path.dirname(os.path.abspath(__file__))
-sys.path.insert(0, path + '/../')
-
 from src.Shape import Shape
 from src.Board import Board
 from src.NamedTupples import Coord
@@ -15,6 +10,8 @@ from src.ScoreManager import ScoreManager
 
 def test_shape_rotation1():
     shape = Shape()
+    shape.layout = [[False, False, True], [False, True, True], [False, False, True]]
+
     shape_layout = copy.deepcopy(shape.layout)
 
     board = Board(Coord(20, 30))
@@ -22,16 +19,37 @@ def test_shape_rotation1():
     # Rotate n*4 time - the shape should be the same
     n = 16
     for i in range(n):
-        shape.rotate_shape(board)
-        shape.rotate_shape(board)
-        shape.rotate_shape(board)
-        shape.rotate_shape(board)
+        assert (shape.rotate_shape(board) is True)
+        assert (shape.rotate_shape(board) is True)
+        assert (shape.rotate_shape(board) is True)
+        assert (shape.rotate_shape(board) is True)
 
     compare = numpy.array(shape_layout) == numpy.array(shape.layout)
     assert (compare.all())
 
 
 def test_shape_rotation2():
+    shape = Shape(0, Coord(1, 5))
+    shape.layout = [[False, False, True], [False, True, True], [False, False, True]]
+
+    # All possible rotations
+    shape_rotations = [[[True, True, True], [False, True, False], [False, False, False]],
+                       [[True, False, False], [True, True, False], [True, False, False]],
+                       [[False, False, False], [False, True, False], [True, True, True]],
+                       [[False, False, True], [False, True, True], [False, False, True]]
+                       ]
+
+    board = Board(Coord(20, 30))
+
+    # Test all possible roations.
+    for rot in shape_rotations:
+        assert (shape.rotate_shape(board) is True)
+
+        compare = numpy.array(rot) == numpy.array(shape.layout)
+        assert (compare.all())
+
+
+def test_shape_rotation3():
     """
     Shape rotation algoritm test.
     :return:
@@ -50,28 +68,50 @@ def test_shape_rotation2():
     assert (compare.all())
 
 
-def test_shape_rotation3():
+def test_shape_rotation4():
     """
     Shape rotation collision test.
     :return:
     """
     shape = Shape(0, Coord(5, 1))
     shape.layout = [[False, False, True], [False, True, True], [False, False, True]]
-    shape.print_shape()
 
     # Rotation should not be changed.
     ref_rotation = shape.layout.copy()
 
     board = Board(Coord(20, 30))
-
     board.set_cell(Coord(6, 2), 1)
 
     # Rotate shape
-    shape.rotate_shape(board)
-    shape.print_shape()
+    assert(shape.rotate_shape(board) is False)
 
     compare = numpy.array(shape.layout) == numpy.array(ref_rotation)
     assert (compare.all())
+
+
+def test_shape_rotation5():
+    """
+    Test every shape rotation.
+    :return:
+    """
+    shape = Shape()
+    board = Board(Coord(20, 30))
+    n = 17
+
+    for layout in Shape.SHAPES:
+        shape.layout = layout
+
+        shape_layout = copy.deepcopy(shape.layout)
+
+        # Rotate n*4 time - the shape should be the same
+        for i in range(n):
+            assert(shape.rotate_shape(board) is True)
+            assert(shape.rotate_shape(board) is True)
+            assert(shape.rotate_shape(board) is True)
+            assert(shape.rotate_shape(board) is True)
+
+        compare = numpy.array(shape_layout) == numpy.array(shape.layout)
+        assert (compare.all())
 
 
 def test_shape_movement1():
@@ -85,13 +125,17 @@ def test_shape_movement1():
     ref_location = (2, 3)
 
     # move right 2 times
-    shape.move_right(board)
-    shape.move_right(board)
+    assert(shape.move_right(board) is True)
+    assert(shape.move_right(board) is True)
+    assert(shape.move_right(board) is True)
+
+    # move left 1 time
+    assert(shape.move_left(board) is True)
 
     # move down 3 times
-    shape.move_down(board)
-    shape.move_down(board)
-    shape.move_down(board)
+    assert(shape.move_down(board) is True)
+    assert(shape.move_down(board) is True)
+    assert(shape.move_down(board) is True)
 
     assert (shape.location == ref_location)
 
