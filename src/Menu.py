@@ -33,14 +33,14 @@ class Menu:
         custom_theme = pygame_menu.themes.THEME_ORANGE.copy()
         custom_theme.menubar_close_button = False
 
+        # Fonts
         custom_theme.title_font = pygame_menu.font.FONT_FRANCHISE
         custom_theme.widget_font = pygame_menu.font.FONT_FRANCHISE
         custom_theme.title_font_size = 64
         custom_theme.widget_font_size = 56
 
         # Define menu
-        self.menu = pygame_menu.Menu(window_size, window_size, 'Tetris',
-                                     theme=custom_theme)
+        self.menu = pygame_menu.Menu(window_size, window_size, 'Tetris', theme=custom_theme)
 
         # Define Play button
         start_game_button = self.menu.add_button('Play', self.start_game)
