@@ -1,6 +1,5 @@
 import copy
 import numpy
-import sys, os
 from shutil import rmtree
 from src.Shape import Shape
 from src.Board import Board
@@ -83,7 +82,7 @@ def test_shape_rotation4():
     board.set_cell(Coord(6, 2), 1)
 
     # Rotate shape
-    assert(shape.rotate_shape(board) is False)
+    assert (shape.rotate_shape(board) is False)
 
     compare = numpy.array(shape.layout) == numpy.array(ref_rotation)
     assert (compare.all())
@@ -105,10 +104,10 @@ def test_shape_rotation5():
 
         # Rotate n*4 time - the shape should be the same
         for i in range(n):
-            assert(shape.rotate_shape(board) is True)
-            assert(shape.rotate_shape(board) is True)
-            assert(shape.rotate_shape(board) is True)
-            assert(shape.rotate_shape(board) is True)
+            assert (shape.rotate_shape(board) is True)
+            assert (shape.rotate_shape(board) is True)
+            assert (shape.rotate_shape(board) is True)
+            assert (shape.rotate_shape(board) is True)
 
         compare = numpy.array(shape_layout) == numpy.array(shape.layout)
         assert (compare.all())
@@ -125,17 +124,17 @@ def test_shape_movement1():
     ref_location = (2, 3)
 
     # move right 2 times
-    assert(shape.move_right(board) is True)
-    assert(shape.move_right(board) is True)
-    assert(shape.move_right(board) is True)
+    assert (shape.move_right(board) is True)
+    assert (shape.move_right(board) is True)
+    assert (shape.move_right(board) is True)
 
     # move left 1 time
-    assert(shape.move_left(board) is True)
+    assert (shape.move_left(board) is True)
 
     # move down 3 times
-    assert(shape.move_down(board) is True)
-    assert(shape.move_down(board) is True)
-    assert(shape.move_down(board) is True)
+    assert (shape.move_down(board) is True)
+    assert (shape.move_down(board) is True)
+    assert (shape.move_down(board) is True)
 
     assert (shape.location == ref_location)
 
