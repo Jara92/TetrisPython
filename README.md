@@ -9,7 +9,7 @@ Tato aplikace je klonem známé hry tetris. Obsahuje další funkce jako uživat
     2. Spuštění hlavního skriptu hry pomocí příkazu `python3 main.py`;
     
 ## Návod
-    - Po spuštění hry se zobrazí hlavní menu. Hru se spustí pomocí "Play";
+    - Po spuštění hry se zobrazí hlavní menu. Hra se spustí pomocí "Play";
     - Hra se ovládá pomocí šipek (NAHORU - rotace tvaru, DOLU - zrychlení pohybu, VLEVO - pohyb vlevo, VPRAVO - pohyb vpravo), 
     pauza pomocí ESC;
     - Ze hry je možno odejít zavřením okna hry;
