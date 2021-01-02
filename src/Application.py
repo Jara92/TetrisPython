@@ -10,8 +10,9 @@ class Application:
         :return:
         """
         app_state = ApplicationState.APPLICATION_STATE_MENU
-        #app_state = ApplicationState.APPLICATION_STATE_GAME
+        # app_state = ApplicationState.APPLICATION_STATE_GAME
 
+        # Run application until application state is not EXIT
         while app_state != ApplicationState.APPLICATION_STATE_EXIT:
             if app_state == ApplicationState.APPLICATION_STATE_MENU:
                 app_state = Menu().run()
@@ -19,7 +20,3 @@ class Application:
                 app_state = Game().run()
 
         return 0
-
-
-
-

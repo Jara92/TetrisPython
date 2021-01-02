@@ -61,7 +61,7 @@ class Game:
     sound_effect_game_over = None
 
     score = 0  # Actual score
-    DEFAULT_LEVEL_UP_SCORE = 400 # New game level up score.
+    DEFAULT_LEVEL_UP_SCORE = 400  # New game level up score.
     level_up_score = DEFAULT_LEVEL_UP_SCORE  # Score needed to achieve to level up
 
     def prepare_game(self, window_width=600, window_height=650, tile_size=30):
@@ -160,11 +160,11 @@ class Game:
         :return:
         """
 
+        # Some debug stuff
         # old_top_score = ScoreManager.get_score()
         # print("Current top score: " + str(old_top_score))
 
         pygame.init()
-
         self.prepare_game()
 
         running = True
@@ -344,4 +344,3 @@ class Game:
         random_index = randint(0, len(Game.__colors) - 1)
 
         return random_index
-        # return CGame.__colors[random_index]

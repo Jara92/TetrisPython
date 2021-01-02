@@ -8,16 +8,15 @@ class Board:
     Game board.
     """
     size = Coord(0, 0)
-    base_score = 50
-    bonus_score = 250
     __matrix = []
+
+    BASE_SCORE = 50
+    BONUS_SCORE = 250
 
     def __init__(self, board_size: Coord = Coord(15, 20)):
         self.size = board_size
 
         # Define game board size and create 2D array.
-        # self.game_board = [[0] * cols] * rows
-        # self.__matrix = [[0] * self.size[0]] * self.size[1]
         self.__matrix = [[-1 for x in range(self.size.y)] for y in range(self.size.x)]
 
         # Fill new matrix by None value.
@@ -47,9 +46,7 @@ class Board:
         # Given cell must be inside boards matrix.
         if self.cell_is_out_of_board(coords):
             return False
-            # raise Exception("Sorry, invalid coords argument: " + str(coords))
 
-        # print(str(coords))
         return self.__matrix[coords.x][coords.y] == -1
 
     def set_cell(self, coords: Coord, color: int):
@@ -119,9 +116,9 @@ class Board:
         # Return score based on row color
         # If the row has only one color then player gets bonus
         if single_color:
-            return self.bonus_score
+            return self.BONUS_SCORE
         else:
-            return self.base_score
+            return self.BASE_SCORE
 
     def draw(self, surface: pygame.Surface, tile_textures: Dict, tile_size: int):
         """
