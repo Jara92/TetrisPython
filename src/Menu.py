@@ -15,17 +15,16 @@ class Menu:
 
     return_state = ApplicationState.APPLICATION_STATE_EXIT
 
-    def prepare_menu(self, window_width=400, window_height=400):
+    def prepare_menu(self, window_size=400):
         """
         Prepare menu window.
-        :param window_width: Window width in pixels.
-        :param window_height: Window height in pixels.
+        :param window_size Window size in pixels.
         :return:
         """
-        self.window_size = Coord(window_width, window_height)
+        self.window_size = Coord(window_size, window_size)
 
         # Create window and flip it
-        self.surface = pygame.display.set_mode((window_width, window_height))
+        self.surface = pygame.display.set_mode((window_size, window_size))
         pygame.display.flip()
 
         pygame.display.set_caption("Tetris")
@@ -40,7 +39,7 @@ class Menu:
         custom_theme.widget_font_size = 56
 
         # Define menu
-        self.menu = pygame_menu.Menu(window_width, window_height, 'Tetris',
+        self.menu = pygame_menu.Menu(window_size, window_size, 'Tetris',
                                      theme=custom_theme)
 
         # Define Play button
