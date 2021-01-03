@@ -164,11 +164,12 @@ class Shape:
             # Get tile global coords.
             tile_coords = Coord(self.location.x + tile.x, self.location.y + tile.y)
 
-            if self.layout[tile.x][tile.y] and board.cell_is_out_of_board(tile_coords):
+            # If tile is out of board.
+            if board.cell_is_out_of_board(tile_coords):
                 return 1
 
-            # If tile is active in current layout and cell is not free in board
-            if self.layout[tile.x][tile.y] and not board.cell_is_free(tile_coords):
+            # If cell is not free in board
+            if not board.cell_is_free(tile_coords):
                 return 2
 
         # Every tile is in free cell so the movement is successful.
