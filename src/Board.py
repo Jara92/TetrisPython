@@ -56,8 +56,8 @@ class Board:
         :param color: Color to be set.
         :return:
         """
-        if self.cell_is_free(coords):
-            self.__matrix[coords.x][coords.y] = color
+
+        self.__matrix[coords.x][coords.y] = color
 
     def update(self, delta_time: float):
         """
