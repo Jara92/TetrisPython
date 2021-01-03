@@ -1,0 +1,7 @@
+name: fikarja3_tetris
+channels:
+  - defaults
+dependencies:
+  - python=3.6
+  - numpy=1.19
+prefix: C:\Users\Admin\miniconda3\envs\fikarja3_tetris
