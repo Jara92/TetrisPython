@@ -213,6 +213,28 @@ def test_shape_bad_spawn():
                              [False, False, False, False]])
 
 
+def test_shape_store():
+    shape = Shape(Coord(0, 0))
+
+    for layout in Shape.SHAPES:
+        board = Board(Coord(15, 20))
+        shape.layout = layout
+
+        # Save shape in the board.
+        shape.store(board)
+
+        # Check the board
+        for i in range(layout.count(0)):
+            for j in range(layout.count(1)):
+                # If given tile at (i, j) is active.
+                if layout[i][j] is True:
+                    # Tile at shape.location + (i, j) must not be free.
+                    assert (board.cell_is_free(Coord(shape.location.x + i, shape.location.y + j)) is False)
+                else:
+                    # Other tiles has to be free.
+                    assert (board.cell_is_free(Coord(shape.location.x + i, shape.location.y + j)) is True)
+
+
 def test_score_manager_load():
     """
     Load data form file.
@@ -243,3 +265,19 @@ def test_score_manager_save():
 
     # Clear testing mess
     rmtree(test_data_directory)
+
+
+def test_board_set_cell():
+    board = Board(Coord(10, 20))
+
+    # Check every cell
+    for i in range(10):
+        for j in range(20):
+            # If x and y coord is equal set color to 1 - make cell filled.
+            if i == j:
+                board.set_cell(Coord(i, j), 1)
+                assert (board.cell_is_free(Coord(i, j)) is False)
+
+            # In other cases cell should be free.
+            else:
+                assert (board.cell_is_free(Coord(i, j)) is True)
