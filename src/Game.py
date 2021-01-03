@@ -20,16 +20,18 @@ class Game:
     __colors = [(255, 255, 255), (255, 128, 0), (178, 34, 34), (50, 205, 50), (0, 191, 255), (255, 215, 0)]
     __tile_textures = {}
 
-    update_interval = 0.45  # Update interval is getting smaller value during playing. The game is getting harder then.
-    speed_up = 1 / 10.0  # Speeding up quocient.
-    actual_update_interval = update_interval  # Actual update interval which may be boosted by speed_up
-    timer = 0  # Update timer.
-
     # Game leveling and speed constants
+    DEFAULT_UPDATE_INTERVAL = 0.45
+    DEFAULT_SPEED_UP_SPEED = 1 / 10.0
     MIN_UPDATE_INTERVAL = 0.10
     UPDATE_INTERVAL_STEP = 0.035  # cca 10 levels (10 speed levels)
-    LEVEL_UP_QUOCIENT = 1.35  # cca 8042 is top highest level score
+    LEVEL_UP_QUOCIENT = 1.1  # FIXME 1.35  # cca 8042 is top highest level score
     SPEED_UP_QUOCIENT = 1.1
+
+    update_interval = DEFAULT_UPDATE_INTERVAL  # Update interval is getting smaller value during playing. The game is getting harder then.
+    speed_up = DEFAULT_SPEED_UP_SPEED  # Speeding up quocient.
+    actual_update_interval = update_interval  # Actual update interval which may be boosted by speed_up
+    timer = 0  # Update timer.
 
     # Pause and game over variables
     pause = False
@@ -138,6 +140,9 @@ class Game:
         self.input = Input()
         self.score = 0
         self.level_up_score = self.DEFAULT_LEVEL_UP_SCORE
+        self.update_interval = self.DEFAULT_UPDATE_INTERVAL
+        self.speed_up = self.DEFAULT_SPEED_UP_SPEED
+
         self.pause = False
         self.game_over = False
 
