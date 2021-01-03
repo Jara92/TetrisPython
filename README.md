@@ -1,6 +1,8 @@
 # TETRIS
 Autor: Jaroslav Fikar
 
+Email: fikarja3@fit.cvut.cz
+
 ## Popis 
 Tato aplikace je klonem známé hry tetris. Obsahuje další funkce jako uživatelské menu, ukládání nejvyššího skore a je postavena na přívětivém uživatelském rozhraní.
 

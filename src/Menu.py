@@ -13,7 +13,7 @@ class Menu:
     surface = None
     menu = None
 
-    return_state = ApplicationState.APPLICATION_STATE_EXIT
+    return_state = ApplicationState.application_state_exit
 
     def prepare_menu(self, window_size=400):
         """
@@ -80,12 +80,12 @@ class Menu:
         """
         Start game action.
         """
-        self.return_state = ApplicationState.APPLICATION_STATE_GAME
+        self.return_state = ApplicationState.application_state_game
         self.menu.disable()
 
     def exit_game(self):
         """
         Exit game action.
         """
-        self.return_state = ApplicationState.APPLICATION_STATE_EXIT
+        self.return_state = ApplicationState.application_state_exit
         self.menu.disable()

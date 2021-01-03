@@ -66,9 +66,10 @@ class Input:
         """
 
         # Rotation action
-        if symbol == self.__controls[Controls.action_rotate] and self.__state.get(Controls.action_rotate,
-                                                                                  InputState.state_released) != InputState.state_idling:
+        if symbol == self.__controls[Controls.action_rotate] \
+                and self.__state.get(Controls.action_rotate, InputState.state_released) != InputState.state_idling:
             self.__state[Controls.action_rotate] = InputState.state_pressed
+
         # Other actions
         elif symbol != self.__controls[Controls.action_rotate]:
             for action in Controls:
@@ -82,6 +83,7 @@ class Input:
         """
         for action in Controls:
             if symbol == self.__controls[action]:
+                # The key is released now.
                 self.__state[action] = InputState.state_released
 
     def is_rotating(self):
@@ -93,6 +95,7 @@ class Input:
 
         # We dont want to rotate the shape few times.
         if out:
+            # We will wait until rotate key is released.
             self.__state[Controls.action_rotate] = InputState.state_idling
 
         return out

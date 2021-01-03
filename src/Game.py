@@ -28,7 +28,7 @@ class Game:
     LEVEL_UP_QUOCIENT = 1.40  # cca 8042 is top highest level score
     SPEED_UP_QUOCIENT = 1.1
 
-    update_interval = DEFAULT_UPDATE_INTERVAL  # Update interval is getting smaller value during playing. The game is getting harder then.
+    update_interval = DEFAULT_UPDATE_INTERVAL  # Update interval is getting smaller value during playing.
     speed_up = DEFAULT_SPEED_UP_SPEED  # Speeding up quocient.
     actual_update_interval = update_interval  # Actual update interval which may be boosted by speed_up
     timer = 0  # Update timer.
@@ -140,6 +140,8 @@ class Game:
         self.input = Input()
         self.score = 0
         self.timer = 0
+
+        # Reset speed and leveling.
         self.level_up_score = self.DEFAULT_LEVEL_UP_SCORE
         self.update_interval = self.DEFAULT_UPDATE_INTERVAL
         self.speed_up = self.DEFAULT_SPEED_UP_SPEED
@@ -193,7 +195,7 @@ class Game:
 
         self.save_top_score()
 
-        return ApplicationState.APPLICATION_STATE_MENU
+        return ApplicationState.application_state_menu
 
     def update(self, delta_time):
         """
@@ -232,11 +234,11 @@ class Game:
 
         # Movement and rotation input handle.
         if self.input.is_moving_left():
-            movement = self.active_shape.move_left(self.board)
+            self.active_shape.move_left(self.board)
         elif self.input.is_moving_right():
-            movement = self.active_shape.move_right(self.board)
+            self.active_shape.move_right(self.board)
         elif self.input.is_rotating():
-            movement = self.active_shape.rotate_shape(self.board)
+            self.active_shape.rotate_shape(self.board)
 
         # Speeding up
         if self.input.is_speeding_up():
@@ -255,8 +257,10 @@ class Game:
             if self.score >= self.level_up_score:
                 # Setup score for next level up
                 self.level_up_score *= self.LEVEL_UP_QUOCIENT
+
                 # Update speed up for current level
                 self.speed_up *= self.SPEED_UP_QUOCIENT
+
                 # Update interval. Update interval must be greater than self.MIN_UPDATE_INTERVAL
                 self.update_interval = max(self.update_interval - self.UPDATE_INTERVAL_STEP, self.MIN_UPDATE_INTERVAL)
 
@@ -322,8 +326,8 @@ class Game:
         pygame.display.update()
 
     def render_text_in_center(self, surface: pygame.Surface, text):
-        surface.blit(text, (((self.board.size.x / 2.0) * self.tile_size) - (text.get_width() / 2.0)
-                            , ((self.board.size.y / 2.0) * self.tile_size) - (text.get_height() / 2.0)))
+        surface.blit(text, (((self.board.size.x / 2.0) * self.tile_size) - (text.get_width() / 2.0),
+                            ((self.board.size.y / 2.0) * self.tile_size) - (text.get_height() / 2.0)))
 
     def draw_matrix(self):
         """

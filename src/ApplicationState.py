@@ -2,6 +2,6 @@ from enum import Enum
 
 
 class ApplicationState(Enum):
-    APPLICATION_STATE_GAME = 0,
-    APPLICATION_STATE_MENU = 1,
-    APPLICATION_STATE_EXIT = 2
+    application_state_game = 0,
+    application_state_menu = 1,
+    application_state_exit = 2
