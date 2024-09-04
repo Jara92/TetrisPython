@@ -1,5 +1,5 @@
-numpy==1.19
-pygame==2.0.1
-pygame_menu==3.3.2
-cx_freeze==6.4.2
+numpy
+pygame
+pygame_menu
+cx_freeze
 pytest

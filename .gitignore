@@ -1,4 +1,6 @@
-/venv/
+venv
+bin
+lib
 /venv/*
 /.idea/
 /dist
